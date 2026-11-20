@@ -1,11 +1,6 @@
-/* =================================
-   BINGKAI FAMILY
-   Main JavaScript
-================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  // MENU NAVIGASI MOBILE
   const menuToggle = document.getElementById("menuToggle");
   const navigation = document.getElementById("navigation");
 
@@ -15,22 +10,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const isOpen = navigation.classList.toggle("active");
 
-      menuToggle.textContent = isOpen ? "✕" : "☰";
+      menuToggle.classList.toggle("is-open", isOpen);
 
-      menuToggle.setAttribute("aria-expanded", isOpen);
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Tutup menu" : "Buka menu"
+      );
 
     });
 
-    // Tutup menu setelah tautan diklik
     navigation.querySelectorAll("a").forEach(function (link) {
 
       link.addEventListener("click", function () {
 
         navigation.classList.remove("active");
-
-        menuToggle.textContent = "☰";
+        menuToggle.classList.remove("is-open");
 
         menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Buka menu");
 
       });
 
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   }
 
-  // TAHUN OTOMATIS PADA FOOTER
   const footerYear = document.querySelector(".footer small");
 
   if (footerYear) {
