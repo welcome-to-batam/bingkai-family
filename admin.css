@@ -1,0 +1,446 @@
+/* =================================
+   BINGKAI FAMILY - ADMIN PANEL
+   Tambahan di atas style.css utama
+================================= */
+
+.admin-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 7% 80px;
+  min-height: 70vh;
+}
+
+/* LOGIN */
+
+.admin-login {
+  display: grid;
+  place-items: center;
+  padding: 40px 0;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 40px 32px;
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  border: 1px solid #e8e3d4;
+  text-align: center;
+}
+
+.login-card h2 {
+  color: var(--green);
+  font-family: Georgia, serif;
+  font-size: 24px;
+  margin: 10px 0 6px;
+}
+
+.login-card > p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 22px;
+}
+
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+#loginForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#loginForm label > span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: .5px;
+}
+
+#loginForm input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d9d4c4;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--cream);
+  transition: .2s;
+}
+
+#loginForm input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(197,161,93,.15);
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.login-status {
+  margin-top: 14px;
+  font-size: 13px;
+  min-height: 18px;
+  font-weight: 600;
+}
+
+.login-status.success { color: #2d7a4d; }
+.login-status.error { color: #c0392b; }
+
+.login-hint {
+  margin-top: 18px;
+  padding: 14px;
+  background: var(--green-light);
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--text);
+  text-align: left;
+  line-height: 1.6;
+}
+
+.login-hint code {
+  background: white;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--green);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* DASHBOARD */
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.dashboard-header h2 {
+  color: var(--green);
+  font-family: Georgia, serif;
+  font-size: clamp(24px, 4vw, 32px);
+  margin: 8px 0;
+}
+
+.dashboard-header p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* UPLOAD CARD */
+
+.upload-card,
+.photo-list-card {
+  background: white;
+  padding: 28px 24px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid #f0eee5;
+  margin-bottom: 28px;
+}
+
+.upload-card h3,
+.photo-list-card h3 {
+  color: var(--green);
+  font-family: Georgia, serif;
+  font-size: 19px;
+  margin-bottom: 18px;
+}
+
+/* DROP ZONE */
+
+.drop-zone {
+  border: 2px dashed #c5a15d;
+  border-radius: 16px;
+  padding: 32px 20px;
+  text-align: center;
+  background: var(--green-light);
+  cursor: pointer;
+  transition: .25s;
+  outline: none;
+}
+
+.drop-zone:hover,
+.drop-zone:focus,
+.drop-zone.dragover {
+  background: #dde9df;
+  border-color: var(--green);
+  transform: translateY(-2px);
+}
+
+.drop-zone-icon {
+  font-size: 42px;
+  margin-bottom: 8px;
+}
+
+.drop-zone-text strong {
+  display: block;
+  color: var(--green);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.drop-zone-text small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.drop-zone-hint {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* FILE PREVIEW */
+
+.file-preview {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.file-preview-item {
+  position: relative;
+  width: 78px;
+  height: 78px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--cream);
+  border: 1px solid #d9d4c4;
+}
+
+.file-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-preview-item .file-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 9px;
+  color: white;
+  background: rgba(0,0,0,.55);
+  padding: 2px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* CAPTION FIELD */
+
+.caption-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.caption-field > span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: .5px;
+}
+
+.caption-field input {
+  padding: 12px 14px;
+  border: 1px solid #d9d4c4;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--cream);
+  transition: .2s;
+}
+
+.caption-field input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(197,161,93,.15);
+}
+
+/* PROGRESS */
+
+.upload-progress {
+  margin-top: 18px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: var(--green-light);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--green), var(--gold));
+  transition: width .3s ease;
+}
+
+#progressText {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* STATUS */
+
+.upload-status {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 18px;
+}
+
+.upload-status.success { color: #2d7a4d; }
+.upload-status.error { color: #c0392b; }
+
+/* PHOTO LIST */
+
+.photo-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.photo-list-header h3 {
+  margin: 0;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  font-size: 11px;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.photo-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 30px 0;
+}
+
+.photo-item {
+  background: var(--cream);
+  border: 1px solid #e8e3d4;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-item-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: var(--green-light);
+  display: block;
+}
+
+.photo-item-body {
+  padding: 10px 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.photo-item-caption {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.photo-item-meta {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.photo-item-actions {
+  padding: 0 12px 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.photo-item-actions button {
+  flex: 1;
+  padding: 7px 8px;
+  font-size: 11px;
+  border-radius: 8px;
+  border: 1px solid #d9d4c4;
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.photo-item-actions .btn-delete:hover {
+  background: #f4d7d3;
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+.photo-item-actions .btn-view:hover {
+  background: var(--green-light);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .admin-main {
+    padding: 30px 5% 90px;
+  }
+
+  .login-card {
+    padding: 30px 20px;
+  }
+
+  .upload-card,
+  .photo-list-card {
+    padding: 22px 16px;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+  }
+}
+  
