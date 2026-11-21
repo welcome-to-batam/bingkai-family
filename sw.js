@@ -1,4 +1,4 @@
-const CACHE_NAME = "bingkai-family-v5";
+const CACHE_NAME = "bingkai-family-v6";
 
 const ASSETS = [
   "./",
