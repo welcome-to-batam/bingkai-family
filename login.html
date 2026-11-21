@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#263d35">
+  <meta name="description" content="Login Admin BINGKAI FAMILY.">
+
+  <title>Login Admin - BINGKAI FAMILY</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="assets/icon-192.png">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="brand">
+    <span class="brand-icon">🌳</span>
+    <span>
+      <strong>BINGKAI FAMILY</strong>
+      <small>Admin Login</small>
+    </span>
+  </a>
+
+  <nav class="navigation">
+    <a href="index.html">Beranda</a>
+    <a href="index.html#album">Album</a>
+    <a href="index.html#fitur">Fitur</a>
+  </nav>
+</header>
+
+<main class="admin-main">
+
+  <section class="admin-login">
+    <div class="login-card">
+      <span class="section-label">ADMIN ACCESS</span>
+      <h2>Masuk ke Admin Panel</h2>
+      <p>Masukkan email dan password admin untuk mengelola album keluarga.</p>
+
+      <form id="loginForm" autocomplete="on">
+        <label>
+          <span>Email</span>
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="admin@bingkai.family"
+            required
+            autocomplete="email">
+        </label>
+
+        <label>
+          <span>Password</span>
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password">
+        </label>
+
+        <button type="submit" class="btn-primary btn-block">Masuk</button>
+      </form>
+
+      <div class="login-status" id="loginStatus" role="status" aria-live="polite"></div>
+
+      <div class="login-hint">
+        <strong>Belum punya akun admin?</strong>
+        Buat akun di Firebase Console &gt; Authentication &gt; Users &gt;
+        Add user. Lihat <code>README-FIREBASE.md</code> untuk panduan
+        lengkap.
+      </div>
+
+      <a href="index.html" class="back-link">← Kembali ke Beranda</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <strong>BINGKAI FAMILY</strong>
+  <p>Satu Keluarga, Sejuta Kenangan.</p>
+  <small id="footerYear">© 2026 BINGKAI FAMILY. All Rights Reserved.</small>
+</footer>
+
+<script type="module" src="login.js"></script>
+
+</body>
+</html>
