@@ -1,1 +1,32 @@
-fghjj
+
+{
+  "id": "./",
+  "name": "BINGKAI FAMILY",
+  "short_name": "Bingkai Family",
+  "description": "Satu Keluarga, Sejuta Kenangan.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf8f1",
+  "theme_color": "#263d35",
+  "lang": "id",
+  "categories": [
+    "lifestyle",
+    "social"
+  ],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
