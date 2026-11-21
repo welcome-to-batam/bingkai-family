@@ -1,1 +1,184 @@
-fghh
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#263d35">
+  <meta name="description" content="BINGKAI FAMILY - Admin Panel untuk mengelola album foto keluarga.">
+
+  <title>Admin Panel - BINGKAI FAMILY</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="assets/icon-192.png">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="brand">
+    <span class="brand-icon">🌳</span>
+    <span>
+      <strong>BINGKAI FAMILY</strong>
+      <small>Admin Panel</small>
+    </span>
+  </a>
+
+  <button
+    class="menu-toggle"
+    id="menuToggle"
+    type="button"
+    aria-label="Buka menu"
+    aria-expanded="false"
+    aria-controls="navigation">
+
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <nav class="navigation" id="navigation">
+    <a href="index.html">Beranda</a>
+    <a href="index.html#pohon">Pohon Keluarga</a>
+    <a href="index.html#album">Album</a>
+    <a href="index.html#fitur">Fitur</a>
+    <button type="button" id="btnLogout" class="admin-link" hidden>Keluar</button>
+  </nav>
+</header>
+
+<main class="admin-main">
+
+  <!-- ============= LOGIN VIEW ============= -->
+  <section class="admin-login" id="loginView">
+    <div class="login-card">
+      <span class="section-label">ADMIN ACCESS</span>
+      <h2>Masuk ke Admin Panel</h2>
+      <p>Masukkan email dan password admin untuk mengelola album keluarga.</p>
+
+      <form id="loginForm" autocomplete="on">
+        <label>
+          <span>Email</span>
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="admin@bingkai.family"
+            required
+            autocomplete="email">
+        </label>
+
+        <label>
+          <span>Password</span>
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password">
+        </label>
+
+        <button type="submit" class="btn-primary btn-block">Masuk</button>
+      </form>
+
+      <div class="login-status" id="loginStatus" role="status" aria-live="polite"></div>
+
+      <div class="login-hint">
+        <strong>Catatan:</strong>
+        Akun admin dibuat di Firebase Console &gt; Authentication &gt; Users.
+        Lihat <code>README-FIREBASE.md</code> untuk panduan lengkap.
+      </div>
+
+      <a href="index.html" class="back-link">← Kembali ke Beranda</a>
+    </div>
+  </section>
+
+  <!-- ============= DASHBOARD VIEW ============= -->
+  <section class="admin-dashboard" id="dashboardView" hidden>
+
+    <div class="dashboard-header">
+      <span class="section-label">DASHBOARD</span>
+      <h2>Kelola Album Keluarga</h2>
+      <p>Unggah foto baru dan kelola foto yang sudah ada.</p>
+    </div>
+
+    <!-- FORM UPLOAD -->
+    <div class="upload-card">
+      <h3>Tambah Foto Baru</h3>
+
+      <form id="uploadForm">
+
+        <!-- Drop zone -->
+        <div
+          class="drop-zone"
+          id="dropZone"
+          tabindex="0"
+          role="button"
+          aria-label="Pilih atau seret foto ke sini">
+          <div class="drop-zone-icon">📸</div>
+          <div class="drop-zone-text">
+            <strong>Klik untuk memilih foto</strong>
+            <small>atau seret & lepas foto ke sini</small>
+          </div>
+          <small class="drop-zone-hint">Format: JPG, PNG, GIF, WEBP — maks 5 MB</small>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            hidden
+            multiple>
+        </div>
+
+        <!-- Preview file dipilih -->
+        <div class="file-preview" id="filePreview" hidden></div>
+
+        <!-- Caption -->
+        <label class="caption-field">
+          <span>Caption / Keterangan</span>
+          <input
+            type="text"
+            id="photoCaption"
+            placeholder="Contoh: Liburan keluarga di Batam, 2026"
+            maxlength="120">
+        </label>
+
+        <!-- Progress -->
+        <div class="upload-progress" id="uploadProgress" hidden>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <small id="progressText">Mengunggah... 0%</small>
+        </div>
+
+        <button type="submit" class="btn-primary btn-block" id="btnUpload" disabled>
+          Unggah Foto
+        </button>
+
+        <div class="upload-status" id="uploadStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <!-- DAFTAR FOTO -->
+    <div class="photo-list-card">
+      <div class="photo-list-header">
+        <h3>Foto Terupload</h3>
+        <button type="button" id="btnRefresh" class="btn-secondary btn-small">Muat Ulang</button>
+      </div>
+
+      <div class="photo-grid" id="photoGrid">
+        <div class="photo-empty">Memuat foto...</div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <strong>BINGKAI FAMILY</strong>
+  <p>Satu Keluarga, Sejuta Kenangan.</p>
+  <small id="footerYear">© 2026 BINGKAI FAMILY. All Rights Reserved.</small>
+</footer>
+
+<!-- Firebase Modular SDK via ESM CDN -->
+<script type="module" src="admin.js"></script>
+
+</body>
+</html>
+  
