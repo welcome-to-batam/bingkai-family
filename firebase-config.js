@@ -1,16 +1,21 @@
-/* ==========================================================
-   BINGKAI FAMILY - FIREBASE CONFIGURATION
-   ----------------------------------------------------------
-   Ganti nilai di bawah ini dengan konfigurasi Firebase
-   project milikmu. Lihat README-FIREBASE.md untuk panduan
-   cara mendapatkan nilai-nilai ini dari Firebase Console.
 
-   Pakai Firebase Modular SDK v10+ (via ESM CDN).
-   ========================================================== */
+/**
+ * BINGKAI FAMILY
+ * FIREBASE CONFIGURATION
+ * Firebase Modular SDK 10.14.1
+ */
 
-// 1) KONFIGURASI PROJECT FIREBASE
-//    Dari: Firebase Console > Project Settings > General >
-//    "Your apps" > Web App > SDK setup and configuration
+// Firebase SDK
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import { getAuth } from
+  "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import { getDatabase } from
+  "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+// Konfigurasi Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyC3f28O-x79T0DICMzAHO9oTl0uxvmxtLE",
   authDomain: "bingkai-family-hartono.firebaseapp.com",
@@ -21,7 +26,16 @@ const firebaseConfig = {
   appId: "1:579275237826:web:4bad74caf5d3482a74ce5b"
 };
 
-// 2) EKSPOR MODUL FIREBASE
-//    Memakai dynamic import dari gstatic CDN agar tetap
-//    kompatibel dengan GitHub Pages (tidak perlu build step).
-export { firebaseConfig };
+// Inisialisasi Firebase
+const app = initializeApp(firebaseConfig);
+
+// Firebase Authentication
+export const auth = getAuth(app);
+
+// Firebase Realtime Database
+export const db = getDatabase(app);
+
+// Ekspor konfigurasi
+export { app, firebaseConfig };
+
+console.log("BINGKAI FAMILY: Firebase berhasil terhubung.");
