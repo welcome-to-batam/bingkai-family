@@ -96,67 +96,73 @@
   </p>
 </section>
 
+
 <section class="tree-section" id="pohon">
+
   <div class="section-heading">
     <span class="section-label">OUR FAMILY TREE</span>
     <h2>Pohon Keluarga</h2>
-    <p>Setiap akar memiliki cerita, setiap cabang memiliki generasi.</p>
+    <p>
+      Setiap akar memiliki cerita,
+      setiap cabang memiliki generasi.
+    </p>
   </div>
 
   <div class="tree-preview">
+
     <div class="tree-decoration">🌳</div>
 
-    <div class="generation">
-      <span class="generation-label">GENERASI 1</span>
-      <div class="person-card">
-        <div class="person-photo">👴</div>
-        <strong>Kakek</strong>
-        <small>Klik untuk melihat profil</small>
-      </div>
-      <div class="person-card">
-        <div class="person-photo">👵</div>
-        <strong>Nenek</strong>
-        <small>Klik untuk melihat profil</small>
-      </div>
+    <div class="generation-menu">
+
+      <button
+        type="button"
+        class="generation-tab active"
+        data-generation="1">
+        <span>👴 👵</span>
+        <strong>Generasi 1</strong>
+        <small>Kakek & Nenek</small>
+      </button>
+
+      <button
+        type="button"
+        class="generation-tab"
+        data-generation="2">
+        <span>👨 👩</span>
+        <strong>Generasi 2</strong>
+        <small>Orang Tua</small>
+      </button>
+
+      <button
+        type="button"
+        class="generation-tab"
+        data-generation="3">
+        <span>👧 👦</span>
+        <strong>Generasi 3</strong>
+        <small>Anak-anak</small>
+      </button>
+
     </div>
 
-    <div class="tree-connector">↓</div>
+    <div class="family-members" id="familyMembers">
 
-    <div class="generation">
-      <span class="generation-label">GENERASI 2</span>
-      <div class="person-card">
-        <div class="person-photo">👨</div>
-        <strong>Ayah</strong>
-        <small>Klik untuk melihat profil</small>
+      <div class="album-empty">
+        Memuat anggota keluarga...
       </div>
-      <div class="person-card">
-        <div class="person-photo">👩</div>
-        <strong>Ibu</strong>
-        <small>Klik untuk melihat profil</small>
-      </div>
+
     </div>
 
-    <div class="tree-connector">↓</div>
-
-    <div class="generation">
-      <span class="generation-label">GENERASI 3</span>
-      <div class="person-card">
-        <div class="person-photo">🧑</div>
-        <strong>Anak</strong>
-        <small>Klik untuk melihat profil</small>
-      </div>
-    </div>
-
-    <p class="demo-note">
-      Tampilan ilustrasi. Data anggota akan dikelola melalui Admin Panel.
+    <p class="demo-note" id="familyTreeMessage">
+      Pilih generasi untuk melihat anggota keluarga.
     </p>
+
   </div>
 
   <a href="admin.html" class="btn-primary">
     Kelola Pohon Keluarga
   </a>
-</section>
 
+</section>
+  
 <section class="album-section" id="album">
   <div class="section-heading">
     <span class="section-label">FAMILY ALBUM</span>
