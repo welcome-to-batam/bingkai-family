@@ -475,6 +475,77 @@
   border-color: #c0392b;
 }
 
+/* MEMBER PHOTO UPLOAD FIELD */
+
+.member-photo-field {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  background: var(--green-light);
+  border-radius: 10px;
+}
+
+.member-photo-preview {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: white;
+  display: grid;
+  place-items: center;
+  font-size: 35px;
+  border: 3px solid var(--gold);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.member-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.member-photo-actions button {
+  padding: 6px 14px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: 1px solid var(--gold);
+  background: white;
+  color: var(--green);
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
+  transition: .2s;
+  white-space: nowrap;
+}
+
+.member-photo-actions button:hover {
+  background: var(--green);
+  color: white;
+}
+
+.member-photo-actions .btn-clear-photo {
+  border-color: #d9d4c4;
+  color: #c0392b;
+}
+
+.member-photo-actions .btn-clear-photo:hover {
+  background: #f4d7d3;
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+.member-row .m-photo {
+  grid-column: 1 / -1;
+}
+
 .sub-form-list:empty::before {
   content: "Belum ada data. Klik tombol + Tambah di atas.";
   color: var(--muted);
@@ -828,4 +899,4 @@
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 10px;
   }
-   }
+}
