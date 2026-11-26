@@ -134,9 +134,9 @@ function renderGeneration(data, allGens) {
             <div class="gen-member-body">
               <div class="gen-member-name">${escapeHtml(m.name || "")}</div>
               ${m.fullName ? `<div class="gen-member-fullname">${escapeHtml(m.fullName)}</div>` : ""}
-              ${(m.birthYear || m.deathYear) ? `
+              ${(m.birthYear || m.deathYear || m.birthMonth) ? `
                 <div class="gen-member-years">
-                  ${escapeHtml(m.birthYear || "?")} — ${escapeHtml(m.deathYear || "sekarang")}
+                  ${escapeHtml(formatMemberYears(m))}
                 </div>
               ` : ""}
               ${m.bio ? `<div class="gen-member-bio">${escapeHtml(m.bio)}</div>` : ""}
@@ -203,6 +203,31 @@ function renderPhoto(photo, name) {
   return escapeHtml(photo);
 }
 
+/**
+ * Format tahun + birthday untuk display di member card.
+ * Contoh: "1925 — 2010 (🎂 15 Maret)"
+ */
+function formatMemberYears(m) {
+  let result = "";
+
+  if (m.birthYear || m.deathYear) {
+    result += (m.birthYear || "?") + " — " + (m.deathYear || "sekarang");
+  }
+
+  // Tambahkan birthday kalau ada
+  if (m.birthMonth && m.birthDay) {
+    const months = [
+      "Januari","Februari","Maret","April","Mei","Juni",
+      "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+    const monthName = months[m.birthMonth - 1] || "";
+    const birthday = " (🎂 " + m.birthDay + " " + monthName + ")";
+    result += birthday;
+  }
+
+  return result;
+}
+
 function showError(title, msg) {
   content.innerHTML = `
     <div class="gen-empty-state">
@@ -254,3 +279,4 @@ if (document.readyState === "loading") {
 }
 
 console.log("[Generasi] Halaman siap.");
+       
