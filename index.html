@@ -42,7 +42,7 @@
     <a href="#pohon">Pohon Keluarga</a>
     <a href="#album">Album</a>
     <a href="#fitur">Fitur</a>
-    <a href="admin.html" class="admin-link">Login Admin</a>
+    <a href="login.html" class="admin-link">Login Admin</a>
   </nav>
 </header>
 
@@ -96,73 +96,25 @@
   </p>
 </section>
 
-
 <section class="tree-section" id="pohon">
-
   <div class="section-heading">
     <span class="section-label">OUR FAMILY TREE</span>
     <h2>Pohon Keluarga</h2>
-    <p>
-      Setiap akar memiliki cerita,
-      setiap cabang memiliki generasi.
-    </p>
+    <p>Setiap akar memiliki cerita, setiap cabang memiliki generasi.</p>
   </div>
 
-  <div class="tree-preview">
-
+  <div class="tree-preview" id="treeContainer">
     <div class="tree-decoration">🌳</div>
-
-    <div class="generation-menu">
-
-      <button
-        type="button"
-        class="generation-tab active"
-        data-generation="1">
-        <span>👴 👵</span>
-        <strong>Generasi 1</strong>
-        <small>Kakek & Nenek</small>
-      </button>
-
-      <button
-        type="button"
-        class="generation-tab"
-        data-generation="2">
-        <span>👨 👩</span>
-        <strong>Generasi 2</strong>
-        <small>Orang Tua</small>
-      </button>
-
-      <button
-        type="button"
-        class="generation-tab"
-        data-generation="3">
-        <span>👧 👦</span>
-        <strong>Generasi 3</strong>
-        <small>Anak-anak</small>
-      </button>
-
+    <div class="tree-empty">
+      <p>Memuat silsilah keluarga...</p>
     </div>
-
-    <div class="family-members" id="familyMembers">
-
-      <div class="album-empty">
-        Memuat anggota keluarga...
-      </div>
-
-    </div>
-
-    <p class="demo-note" id="familyTreeMessage">
-      Pilih generasi untuk melihat anggota keluarga.
-    </p>
-
   </div>
 
-  <a href="admin.html" class="btn-primary">
+  <a href="login.html" class="btn-primary">
     Kelola Pohon Keluarga
   </a>
-
 </section>
-  
+
 <section class="album-section" id="album">
   <div class="section-heading">
     <span class="section-label">FAMILY ALBUM</span>
@@ -248,12 +200,12 @@
   <a href="#pohon">🌳<small>Silsilah</small></a>
   <a href="#album">📸<small>Album</small></a>
   <a href="#fitur">✧<small>Fitur</small></a>
-  <a href="admin.html">♙<small>Admin</small></a>
+  <a href="login.html">♙<small>Admin</small></a>
 </nav>
 
 <script src="script.js"></script>
 <script type="module" src="album.js"></script>
-<script type="module" src="family-tree.js"></script>
+<script type="module" src="tree.js"></script>
 
 </body>
 </html>
