@@ -1,41 +1,26 @@
+/* ==========================================================
+   BINGKAI FAMILY - FIREBASE CONFIGURATION
+   ----------------------------------------------------------
+   Arsitektur yang dipakai (Spark plan / gratis):
+     - Firebase Authentication  : login admin (email/password)
+     - Realtime Database        : simpan metadata + foto (base64)
+     - Firebase Storage         : TIDAK DIPAKAI (butuh Blaze plan)
 
-/**
- * BINGKAI FAMILY
- * FIREBASE CONFIGURATION
- * Firebase Modular SDK 10.14.1
- */
+   Ganti nilai di bawah ini dengan konfigurasi Firebase project
+   milikmu. Lihat README-FIREBASE.md untuk panduan mendapatkan
+   nilai-nilai ini dari Firebase Console.
 
-// Firebase SDK
-import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+   Pakai Firebase Modular SDK v10+ (via ESM CDN).
+   ========================================================== */
 
-import { getAuth } from
-  "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
-import { getDatabase } from
-  "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
-
-// Konfigurasi Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyC3f28O-x79T0DICMzAHO9oTl0uxvmxtLE",
-  authDomain: "bingkai-family-hartono.firebaseapp.com",
-  databaseURL: "https://bingkai-family-hartono-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "bingkai-family-hartono",
-  storageBucket: "bingkai-family-hartono.firebasestorage.app",
-  messagingSenderId: "579275237826",
-  appId: "1:579275237826:web:4bad74caf5d3482a74ce5b"
+  apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  authDomain: "bingkai-family.firebaseapp.com",
+  databaseURL: "https://bingkai-family-default-rtdb.firebaseio.com",
+  projectId: "bingkai-family",
+  storageBucket: "bingkai-family.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:abcdef0123456789"
 };
 
-// Inisialisasi Firebase
-const app = initializeApp(firebaseConfig);
-
-// Firebase Authentication
-export const auth = getAuth(app);
-
-// Firebase Realtime Database
-export const db = getDatabase(app);
-
-// Ekspor konfigurasi
-export { app, firebaseConfig };
-
-console.log("BINGKAI FAMILY: Firebase berhasil terhubung.");
+export { firebaseConfig };
