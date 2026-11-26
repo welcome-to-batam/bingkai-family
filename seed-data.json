@@ -1,0 +1,105 @@
+{
+  "generations": {
+    "gen1": {
+      "order": 1,
+      "title": "Generasi 1",
+      "subtitle": "Pendiri Keluarga",
+      "period": "1920 - 2010",
+      "story": "Kakek dan Nenek adalah awal mula keluarga besar BINGKAI FAMILY. Berasal dari generasi yang perjuangan hidupnya berat, mereka menanamkan nilai keluarga, gotong royong, dan kebersamaan yang kita pegang sampai hari ini. Mereka merantau dari daerah Riau ke Batam membawa harapan anak-cucu yang lebih baik, dan dari situ tumbuh keluarga besar yang kita kenal sekarang.",
+      "quote": "Keluarga adalah akar yang menumbuhkan generasi.",
+      "quoteAuthor": "Kakek",
+      "members": {
+        "m1": {
+          "name": "Kakek",
+          "fullName": "H. Ahmad bin Ali",
+          "photo": "👴",
+          "birthYear": "1925",
+          "deathYear": "2010",
+          "bio": "Lahir di daerah Riau, merantau ke Batam di usia muda. Bekerja sebagai nelayan kemudian membuka usaha toko kelontong yang menjadi sumber penghidupan keluarga. Dikenal sebagai sosok yang tegas namun sangat penyayang."
+        },
+        "m2": {
+          "name": "Nenek",
+          "fullName": "Hj. Fatimah binti Yusuf",
+          "photo": "👵",
+          "birthYear": "1928",
+          "deathYear": "2005",
+          "bio": "Ibu rumah tangga yang gigih. Penjaga tradisi kuliner keluarga, guru ngaji anak-anak tetangga, dan tempat curhat seluruh keluarga. Resep masakannya masih diturunkan sampai sekarang."
+        }
+      },
+      "milestones": {
+        "ms1": { "year": "1945", "event": "Kakek dan Nenek menikah di Riau" },
+        "ms2": { "year": "1948", "event": "Anak pertama lahir" },
+        "ms3": { "year": "1955", "event": "Pindah ke Batam mencari penghidupan baru" },
+        "ms4": { "year": "1960", "event": "Membuka toko kelontong pertama di Batam" }
+      },
+      "createdAt": 1700000000000
+    },
+    "gen2": {
+      "order": 2,
+      "title": "Generasi 2",
+      "subtitle": "Penerus Tradisi",
+      "period": "1948 - Sekarang",
+      "story": "Generasi kedua lahir di masa peralihan. Tumbuh dengan nilai didikan Kakek-Nenek, mereka memimpin keluarga melewati masa-masa sulit dan membuka peluang baru untuk generasi berikutnya. Generasi ini pula yang mulai memperkenalkan pendidikan formal tinggi sebagai prioritas untuk anak-anak mereka.",
+      "quote": "Didik anak dengan cinta, bukan dengan tekanan.",
+      "quoteAuthor": "Ayah",
+      "members": {
+        "m1": {
+          "name": "Ayah",
+          "fullName": "Bapak H. Budi bin Ahmad",
+          "photo": "👨",
+          "birthYear": "1948",
+          "deathYear": "",
+          "bio": "Anak pertama Kakek-Nenek. Melanjutkan usaha toko kelontong dan mengembangkannya menjadi minimarket. Sumber utama nasehat keluarga, dikenal bijaksana dan sabar."
+        },
+        "m2": {
+          "name": "Ibu",
+          "fullName": "Ibu Siti Aminah",
+          "photo": "👩",
+          "birthYear": "1950",
+          "deathYear": "",
+          "bio": "Guru SD yang merawat pendidikan anak-anak keluarga. Aktif di pengajian dan kegiatan sosial kampung. Tukang masak terbaik di acara keluarga."
+        }
+      },
+      "milestones": {
+        "ms1": { "year": "1972", "event": "Ayah dan Ibu menikah" },
+        "ms2": { "year": "1978", "event": "Anak pertama generasi 3 lahir" },
+        "ms3": { "year": "1985", "event": "Toko kelontong dikembangkan menjadi minimarket" }
+      },
+      "createdAt": 1700000001000
+    },
+    "gen3": {
+      "order": 3,
+      "title": "Generasi 3",
+      "subtitle": "Generasi Muda",
+      "period": "1978 - Sekarang",
+      "story": "Generasi muda yang tumbuh di era digital. Membawa keluarga masuk era baru dengan teknologi dan kreativitas, sambil tetap menjaga nilai tradisi yang diwariskan generasi sebelumnya. Generasi ini mulai merantau keluar Batam, membuka cabang keluarga di berbagai kota.",
+      "quote": "Tradisi adalah jembatan, bukan kandang.",
+      "quoteAuthor": "Anak",
+      "members": {
+        "m1": {
+          "name": "Kakak",
+          "fullName": "Rina Budi Putri",
+          "photo": "🧑",
+          "birthYear": "1978",
+          "deathYear": "",
+          "bio": "Anak pertama generasi 3. Bekerja di bidang teknologi, merantau ke Jakarta, namun rutin pulang ke Batam untuk acara keluarga. Inisiator platform digital BINGKAI FAMILY."
+        },
+        "m2": {
+          "name": "Adik",
+          "fullName": "Doni Budi Pratama",
+          "photo": "🧒",
+          "birthYear": "1985",
+          "deathYear": "",
+          "bio": "Anak kedua. Membantu usaha minimarket keluarga dan aktif mengelola acara keluarga di Batam. Penjaga hubungan keluarga di tingkat lokal."
+        }
+      },
+      "milestones": {
+        "ms1": { "year": "2000", "event": "Kakak merantau ke Jakarta" },
+        "ms2": { "year": "2010", "event": "Adik mengambil alih manajemen minimarket" },
+        "ms3": { "year": "2020", "event": "Reuni keluarga besar pertama setelah pandemi" },
+        "ms4": { "year": "2026", "event": "Peluncuran platform digital BINGKAI FAMILY" }
+      },
+      "createdAt": 1700000002000
+    }
+  }
+}
