@@ -292,6 +292,74 @@ function estimateBase64Bytes(dataUrl) {
 }
 
 // =========================================================
+// 3b. KOMPRESI FOTO PROFIL (SQUARE CROP)
+// =========================================================
+
+/**
+ * Kompres file gambar jadi JPEG base64 dengan square crop
+ * (center-crop ke persegi — bagus untuk foto profil).
+ *
+ * - Resize ke maks 400x400 px (atau lebih kecil jika foto asli lebih kecil)
+ * - JPEG quality 0.75 (fallback 0.5 jika masih kebesaran)
+ * - Hard limit 150 KB
+ *
+ * Lebih agresif dari compressImage album karena foto profil
+ * tidak perlu resolusi besar.
+ */
+function compressProfilePhoto(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        // Center-crop ke persegi
+        const minDim = Math.min(img.width, img.height);
+        const sx = (img.width - minDim) / 2;
+        const sy = (img.height - minDim) / 2;
+
+        // Target: maks 400px, atau lebih kecil jika foto asli lebih kecil
+        const targetSize = Math.min(400, minDim);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = targetSize;
+        canvas.height = targetSize;
+
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, targetSize, targetSize);
+        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+
+        // Coba quality utama
+        let dataUrl = canvas.toDataURL("image/jpeg", 0.75);
+        let sizeBytes = estimateBase64Bytes(dataUrl);
+
+        // Kalau masih kebesaran, turunkan quality
+        if (sizeBytes > 100 * 1024) {
+          dataUrl = canvas.toDataURL("image/jpeg", 0.5);
+          sizeBytes = estimateBase64Bytes(dataUrl);
+        }
+
+        if (sizeBytes > 150 * 1024) {
+          reject(new Error(
+            "Foto terlalu besar setelah kompresi (" +
+            Math.round(sizeBytes / 1024) + " KB). Coba foto lain."
+          ));
+          return;
+        }
+
+        resolve(dataUrl);
+      };
+      img.onerror = () => reject(new Error("Gagal memuat gambar."));
+      img.src = e.target.result;
+    };
+
+    reader.onerror = () => reject(new Error("Gagal membaca file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+// =========================================================
 // 4. UTIL: TIMEOUT WRAPPER
 // =========================================================
 
@@ -734,18 +802,27 @@ function cancelGenForm() {
 // Tambah row anggota generasi
 function addGenMemberRow(member) {
   const row = document.createElement("div");
-  row.className = "sub-form-row";
+  row.className = "sub-form-row member-row";
   row.dataset.subId = member && member._key
     ? member._key
     : "m" + Date.now() + Math.random().toString(36).slice(2, 6);
 
   row.innerHTML = `
+    <div class="member-photo-field">
+      <div class="member-photo-preview">👤</div>
+      <div class="member-photo-actions">
+        <button type="button" class="btn-upload-photo">📷 Upload Foto</button>
+        <button type="button" class="btn-clear-photo">Hapus Foto</button>
+        <input type="file" class="m-photo-file" accept="image/*" hidden>
+      </div>
+    </div>
+    <input type="text" class="m-photo" placeholder="Atau ketik emoji (👴) atau URL foto"
+
+    value="${escapeAttr(member ? member.photo : "")}">
     <input type="text" class="m-name" placeholder="Nama panggilan"
       value="${escapeAttr(member ? member.name : "")}">
     <input type="text" class="m-fullname" placeholder="Nama lengkap"
       value="${escapeAttr(member ? member.fullName : "")}">
-    <input type="text" class="m-photo" placeholder="Emoji (👴) atau URL foto"
-      value="${escapeAttr(member ? member.photo : "")}">
     <input type="text" class="m-birth" placeholder="Tahun lahir"
       value="${escapeAttr(member ? member.birthYear : "")}">
     <input type="text" class="m-death" placeholder="Tahun wafat (kosongkan jika masih hidup)"
@@ -754,8 +831,73 @@ function addGenMemberRow(member) {
     <button type="button" class="btn-remove-row">Hapus Anggota</button>
   `;
 
+  // Wire up photo upload
+  const photoInput = row.querySelector(".m-photo");
+  const photoFile = row.querySelector(".m-photo-file");
+  const preview = row.querySelector(".member-photo-preview");
+
+  row.querySelector(".btn-upload-photo").addEventListener("click", () => {
+    photoFile.click();
+  });
+
+  photoFile.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("File harus berupa gambar.");
+      e.target.value = "";
+      return;
+    }
+
+    try {
+      const dataUrl = await compressProfilePhoto(file);
+      photoInput.value = dataUrl;
+      updateMemberPhotoPreview(preview, dataUrl);
+    } catch (err) {
+      alert("Gagal upload foto: " + err.message);
+    }
+
+    e.target.value = "";
+  });
+
+  row.querySelector(".btn-clear-photo").addEventListener("click", () => {
+    photoInput.value = "";
+    updateMemberPhotoPreview(preview, "");
+  });
+
+  photoInput.addEventListener("input", () => {
+    updateMemberPhotoPreview(preview, photoInput.value);
+  });
+
   row.querySelector(".btn-remove-row").addEventListener("click", () => row.remove());
+
+  // Initial preview dari data yang sudah ada
+  updateMemberPhotoPreview(preview, member ? (member.photo || "") : "");
+
   genMembersContainer.appendChild(row);
+}
+
+/**
+ * Update preview foto anggota di form admin.
+ * - Kalau photoValue kosong → tampilkan placeholder 👤
+ * - Kalau photoValue URL/data URL → tampilkan sebagai <img>
+ * - Kalau photoValue emoji/text → tampilkan sebagai text
+ */
+function updateMemberPhotoPreview(previewEl, photoValue) {
+  if (!photoValue) {
+    previewEl.innerHTML = "👤";
+    return;
+  }
+
+  if (photoValue.startsWith("http://") ||
+      photoValue.startsWith("https://") ||
+      photoValue.startsWith("data:")) {
+    previewEl.innerHTML = '<img src="' + photoValue + '" alt="Preview">';
+  } else {
+    // Emoji atau text
+    previewEl.innerHTML = escapeHtml(photoValue);
+  }
 }
 
 // Tambah row milestone
