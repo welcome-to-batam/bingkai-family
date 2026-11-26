@@ -564,6 +564,9 @@ a {
   border: 1px solid #f0eee5;
   transition: .3s;
   text-align: center;
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .feature-card:hover {
@@ -649,7 +652,7 @@ a {
 
 .bottom-nav {
   display: none;
-   }
+}
 
 /* RESPONSIVE MOBILE */
 
