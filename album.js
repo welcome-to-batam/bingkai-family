@@ -1,147 +1,177 @@
 /* ==========================================================
-   BINGKAI FAMILY - PUBLIC ALBUM
-   ----------------------------------------------------------
-   Memuat daftar foto dari Realtime Database (path: photos)
-   untuk ditampilkan di halaman utama (index.html).
-   Tidak perlu login — siapa saja bisa melihat foto.
-
-   Foto disimpan sebagai base64 string di field "data".
-
-   Versi ini lebih defensif:
-   - Handle DOM yang sudah ready sebelum script jalan
-   - Logging lebih verbose untuk debugging
-   - Tampilkan error spesifik kalau query gagal
+   BINGKAI FAMILY - ALBUM PAGE (Enhanced Gallery)
+   Galeri foto dengan masonry layout + lightbox + search
    ========================================================== */
+
 import { initializeApp } from
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getDatabase,
   ref,
+  get,
   query,
   orderByChild,
-  limitToLast,
-  get
+  limitToLast
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 import { firebaseConfig } from "./firebase-config.js";
 
-console.log("[Album] Module album.js dimuat.");
-
-// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-console.log("[Album] Firebase app & database siap.");
 
-// Elemen
-const albumGrid = document.getElementById("albumGrid");
-console.log("[Album] Elemen #albumGrid ditemukan:", !!albumGrid);
+const masonry = document.getElementById("albumMasonry");
+const searchInput = document.getElementById("albumSearch");
+const albumStats = document.getElementById("albumStats");
 
-// Jumlah foto yang ditampilkan di halaman publik
-const PHOTO_LIMIT = 30;
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxCaption = document.getElementById("lightboxCaption");
+const lightboxClose = document.getElementById("lightboxClose");
+const lightboxPrev = document.getElementById("lightboxPrev");
+const lightboxNext = document.getElementById("lightboxNext");
+
+let allPhotos = [];
+let currentLightboxIdx = 0;
+const PHOTO_LIMIT = 100;
 
 async function loadAlbum() {
-  console.log("[Album] loadAlbum() dipanggil.");
-
-if (!albumGrid) {
-    console.error("[Album] #albumGrid tidak ditemukan di halaman ini.");
-    return;
-  }
-
-  albumGrid.innerHTML =
-    '<div class="album-empty">Memuat foto keluarga...</div>';
+  if (!masonry) return;
 
   try {
-    console.log("[Album] Mengirim query ke Realtime Database...");
-
     const photosRef = query(
       ref(db, "photos"),
       orderByChild("createdAt"),
       limitToLast(PHOTO_LIMIT)
     );
 
-  const snapshot = await get(photosRef);
+    const snap = await get(photosRef);
 
-    console.log("[Album] Query selesai. exists =", snapshot.exists());
-
-    if (!snapshot.exists()) {
-      albumGrid.innerHTML =
-        '<div class="album-empty">' +
-        'Belum ada foto. <a href="login.html" style="color:var(--gold);font-weight:600">' +
-        'Masuk ke Admin</a> untuk menambah foto pertama.</div>';
+    if (!snap.exists()) {
+      masonry.innerHTML = `
+        <div class="feature-empty">
+          <p>Belum ada foto di album.</p>
+          <a href="login.html">Masuk Admin untuk Upload</a>
+        </div>`;
       return;
     }
 
-  // Reverse: terbaru di atas
-    const items = [];
-    snapshot.forEach((child) => {
-      items.push(child.val());
+    allPhotos = [];
+    snap.forEach((child) => {
+      allPhotos.push(child.val());
     });
-    items.reverse();
+    allPhotos.reverse(); // terbaru di atas
 
-    console.log("[Album] Jumlah foto dimuat:", items.length);
+    albumStats.innerHTML = `
+      <div class="feature-stat"><strong>${allPhotos.length}</strong><small>FOTO</small></div>
+    `;
 
-    albumGrid.innerHTML = "";
-    items.forEach((data) => {
-      const photo = createPhotoCard(data);
-      albumGrid.appendChild(photo);
-    });
-
-  console.log("[Album] Render selesai.");
+    renderMasonry();
   } catch (err) {
     console.error("[Album] Error:", err);
-    albumGrid.innerHTML =
-      '<div class="album-empty">' +
-      'Gagal memuat foto: ' + friendlyError(err) +
-      '<br><br>Pastikan:<br>' +
-      '1. Konfigurasi <code>firebase-config.js</code> sudah benar<br>' +
-      '2. Realtime Database Rules mengizinkan baca publik + punya .indexOn<br>' +
-      '3. Database URL sudah diisi dengan benar' +
-      '</div>';
+    masonry.innerHTML = `
+      <div class="feature-empty">
+        <p>Gagal memuat album.</p>
+        <small>${escapeHtml(err.message)}</small>
+      </div>`;
   }
 }
 
-function createPhotoCard(data) {
-  const a = document.createElement("a");
-  a.className = "album-photo";
-  a.href = data.data; // base64 data URL
-  a.target = "_blank";
-  a.rel = "noopener";
+function renderMasonry() {
+  const term = (searchInput.value || "").toLowerCase().trim();
 
-  const img = document.createElement("img");
-  img.src = data.data;
-  img.alt = data.caption || data.name || "Foto keluarga";
-  img.loading = "lazy";
+  let filtered = allPhotos;
+  if (term) {
+    filtered = allPhotos.filter((p) => {
+      const caption = (p.caption || "").toLowerCase();
+      const name = (p.name || "").toLowerCase();
+      return caption.includes(term) || name.includes(term);
+    });
+  }
 
-  const caption = document.createElement("div");
-  caption.className = "album-caption";
-  caption.textContent = data.caption || "";
+  if (filtered.length === 0) {
+    masonry.innerHTML = `
+      <div class="feature-empty">
+        <p>Tidak ada foto yang cocok.</p>
+      </div>`;
+    return;
+  }
 
-a.appendChild(img);
-  if (data.caption) a.appendChild(caption);
+  masonry.innerHTML = filtered.map((p, idx) => `
+    <div class="album-item" data-idx="${idx}">
+      <img src="${escapeAttr(p.data)}" alt="${escapeAttr(p.caption || p.name || "Foto keluarga")}" loading="lazy">
+      ${p.caption ? `<div class="album-item-caption">${escapeHtml(p.caption)}</div>` : ""}
+    </div>
+  `).join("");
 
-  return a;
+  // Wire click → lightbox
+  masonry.querySelectorAll(".album-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const idx = parseInt(item.dataset.idx);
+      openLightbox(filtered, idx);
+    });
+  });
 }
 
-function friendlyError(err) {
-  const msg = err.message || String(err);
-  if (/index not defined/i.test(msg)) {
-    return 'Rules belum punya .indexOn untuk "createdAt". ' +
-      'Buka README-FIREBASE.md bagian Rules.';
-  }
-  if (/permission denied/i.test(msg)) {
-    return 'Permission denied. Periksa Realtime Database Rules.';
-  }
-  return msg;
+function openLightbox(photos, idx) {
+  currentLightboxIdx = idx;
+  showLightboxPhoto(photos);
+  lightbox.classList.add("active");
 }
 
-// Trigger loadAlbum: handle kedua kasus
-// (DOM masih loading, atau DOM sudah ready)
+function showLightboxPhoto(photos) {
+  const p = photos[currentLightboxIdx];
+  if (!p) return;
+  lightboxImg.src = p.data;
+  lightboxCaption.textContent = p.caption || p.name || "";
+}
+
+// Lightbox navigation
+lightboxClose.addEventListener("click", () => lightbox.classList.remove("active"));
+
+lightboxPrev.addEventListener("click", () => {
+  currentLightboxIdx = (currentLightboxIdx - 1 + allPhotos.length) % allPhotos.length;
+  showLightboxPhoto(allPhotos);
+});
+
+lightboxNext.addEventListener("click", () => {
+  currentLightboxIdx = (currentLightboxIdx + 1) % allPhotos.length;
+  showLightboxPhoto(allPhotos);
+});
+
+// Click outside to close
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox) lightbox.classList.remove("active");
+});
+
+// Keyboard nav
+document.addEventListener("keydown", (e) => {
+  if (!lightbox.classList.contains("active")) return;
+  if (e.key === "Escape") lightbox.classList.remove("active");
+  if (e.key === "ArrowLeft") lightboxPrev.click();
+  if (e.key === "ArrowRight") lightboxNext.click();
+});
+
+// Search
+searchInput.addEventListener("input", renderMasonry);
+
+function escapeHtml(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function escapeAttr(str) { return escapeHtml(str); }
+
+// Footer year
+const footerYear = document.getElementById("footerYear");
+if (footerYear) {
+  footerYear.textContent =
+    "© " + new Date().getFullYear() + " BINGKAI FAMILY. All Rights Reserved.";
+}
+
 if (document.readyState === "loading") {
-  console.log("[Album] DOM masih loading, tunggu DOMContentLoaded...");
   document.addEventListener("DOMContentLoaded", loadAlbum);
 } else {
-  console.log("[Album] DOM sudah ready, langsung load.");
   loadAlbum();
 }
-
-console.log("[Album] Album siap (RTDB mode).");
