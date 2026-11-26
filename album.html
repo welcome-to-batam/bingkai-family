@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#263d35">
+  <meta name="description" content="BINGKAI FAMILY - Album foto keluarga lengkap.">
+  <title>Album Keluarga - BINGKAI FAMILY</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="features.css">
+  <link rel="icon" href="assets/icon-192.png">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="brand">
+    <span class="brand-icon">🌳</span>
+    <span><strong>BINGKAI FAMILY</strong><small>Album Keluarga</small></span>
+  </a>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="navigation" id="navigation">
+    <a href="index.html">Beranda</a>
+    <a href="pohon.html">Silsilah</a>
+    <a href="anggota.html">Anggota</a>
+    <a href="login.html" class="admin-link">Login Admin</a>
+  </nav>
+</header>
+
+<main class="feature-main">
+  <section class="feature-hero">
+    <span class="feature-eyebrow">✦ FAMILY ALBUM</span>
+    <h1>Album Keluarga</h1>
+    <p>Galeri lengkap momen berharga keluarga kita.</p>
+    <div class="feature-stats" id="albumStats"></div>
+  </section>
+
+  <section class="feature-content">
+    <div class="album-search-bar">
+      <input type="text" id="albumSearch" placeholder="🔍 Cari foto by caption...">
+    </div>
+    <div class="album-masonry" id="albumMasonry">
+      <div class="feature-loading">Memuat foto...</div>
+    </div>
+  </section>
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>BINGKAI FAMILY</strong>
+  <p>Satu Keluarga, Sejuta Kenangan.</p>
+  <small id="footerYear">© 2026 BINGKAI FAMILY. All Rights Reserved.</small>
+</footer>
+
+<script src="script.js"></script>
+<script type="module" src="album.js"></script>
+</body>
+</html>
