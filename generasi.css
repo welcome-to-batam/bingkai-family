@@ -380,9 +380,9 @@
     text-align: center;
   }
 
-.gen-story,
+  .gen-story,
   .gen-members,
   .gen-timeline {
     padding: 50px 5%;
   }
-}
+     }
