@@ -60,7 +60,13 @@
       📸 Album Foto
     </button>
     <button type="button" class="tab-btn" data-tab="generasi">
-      🌳 Generasi Keluarga
+      🌳 Generasi
+    </button>
+    <button type="button" class="tab-btn" data-tab="kalender">
+      📅 Kalender
+    </button>
+    <button type="button" class="tab-btn" data-tab="sejarah">
+      📖 Sejarah
     </button>
   </div>
 
@@ -239,6 +245,138 @@
 
   </div>
 
+  <!-- =================== KALENDER TAB =================== -->
+  <div class="tab-content" id="tab-kalender" hidden>
+
+    <div class="gen-list-container">
+      <div class="gen-list-header">
+        <h3>Daftar Acara</h3>
+        <button type="button" id="btnAddEvent" class="btn-primary btn-small">
+          + Tambah Acara
+        </button>
+      </div>
+
+      <div class="gen-list" id="eventList">
+        <div class="gen-empty">Memuat acara...</div>
+      </div>
+    </div>
+
+    <div class="gen-form-container" id="eventFormContainer" hidden>
+      <div class="gen-list-header">
+        <h3 id="eventFormTitle">Tambah Acara Baru</h3>
+        <button type="button" id="btnCancelEvent" class="btn-secondary btn-small">
+          ← Kembali ke Daftar
+        </button>
+      </div>
+
+      <form id="eventForm" class="gen-form">
+        <div class="form-grid">
+          <label>
+            <span>Tanggal *</span>
+            <input type="date" id="eventDate" required>
+            <small>Format otomatis: YYYY-MM-DD</small>
+          </label>
+          <label>
+            <span>Tipe Acara</span>
+            <select id="eventType">
+              <option value="birthday">🎂 Ulang Tahun</option>
+              <option value="anniversary">💍 Anniversary</option>
+              <option value="reunion">👨‍👩‍👧‍👦 Reuni</option>
+              <option value="other">📅 Acara Lain</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="full-width">
+          <span>Judul *</span>
+          <input type="text" id="eventTitle" placeholder="Contoh: Reuni Keluarga Besar 2026" required>
+        </label>
+
+        <label class="full-width">
+          <span>Deskripsi</span>
+          <textarea id="eventDesc" rows="3" placeholder="Detail acara..."></textarea>
+        </label>
+
+        <label class="full-width">
+          <span><input type="checkbox" id="eventYearly"> Ulang setiap tahun</span>
+          <small>Centang untuk acara tahunan (ulang tahun, anniversary)</small>
+        </label>
+
+        <div class="form-actions">
+          <button type="button" id="btnCancelEvent2" class="btn-secondary">Batal</button>
+          <button type="submit" id="btnSaveEvent" class="btn-primary">
+            Simpan Acara
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- =================== SEJARAH TAB =================== -->
+  <div class="tab-content" id="tab-sejarah" hidden>
+
+    <div class="gen-list-container">
+      <div class="gen-list-header">
+        <h3>Daftar Artikel</h3>
+        <button type="button" id="btnAddArticle" class="btn-primary btn-small">
+          + Tambah Artikel
+        </button>
+      </div>
+
+      <div class="gen-list" id="articleList">
+        <div class="gen-empty">Memuat artikel...</div>
+      </div>
+    </div>
+
+    <div class="gen-form-container" id="articleFormContainer" hidden>
+      <div class="gen-list-header">
+        <h3 id="articleFormTitle">Tambah Artikel Baru</h3>
+        <button type="button" id="btnCancelArticle" class="btn-secondary btn-small">
+          ← Kembali ke Daftar
+        </button>
+      </div>
+
+      <form id="articleForm" class="gen-form">
+        <div class="form-grid">
+          <label>
+            <span>Judul *</span>
+            <input type="text" id="articleTitle" placeholder="Asal-Usul Keluarga" required>
+          </label>
+          <label>
+            <span>Kategori</span>
+            <select id="articleCategory">
+              <option value="asal-usul">Asal-Usul</option>
+              <option value="migrasi">Migrasi</option>
+              <option value="tradisi">Tradisi</option>
+              <option value="nilai">Nilai Keluarga</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="full-width">
+          <span>Ringkasan (Excerpt)</span>
+          <input type="text" id="articleExcerpt" placeholder="Satu kalimat singkat tentang artikel ini" maxlength="200">
+        </label>
+
+        <label class="full-width">
+          <span>Isi Artikel *</span>
+          <textarea id="articleBody" rows="10" placeholder="Tulis artikel lengkap di sini..." required></textarea>
+          <small>Pisahkan paragraf dengan baris kosong (Enter 2x)</small>
+        </label>
+
+        <div class="form-actions">
+          <button type="button" id="btnCancelArticle2" class="btn-secondary">Batal</button>
+          <button type="submit" id="btnSaveArticle" class="btn-primary">
+            Simpan Artikel
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
 </main>
 
 <footer class="footer">
@@ -251,4 +389,5 @@
 <script type="module" src="admin.js"></script>
 
 </body>
-  </html>
+</html>
+          
