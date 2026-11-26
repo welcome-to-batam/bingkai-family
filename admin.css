@@ -366,7 +366,8 @@
 }
 
 .gen-form input,
-.gen-form textarea {
+.gen-form textarea,
+.gen-form select {
   padding: 11px 13px;
   border: 1px solid #d9d4c4;
   border-radius: 10px;
@@ -377,11 +378,24 @@
 }
 
 .gen-form input:focus,
-.gen-form textarea:focus {
+.gen-form textarea:focus,
+.gen-form select:focus {
   outline: none;
   border-color: var(--gold);
   background: white;
   box-shadow: 0 0 0 3px rgba(197,161,93,.15);
+}
+
+.gen-form input[type="checkbox"] {
+  width: auto;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.gen-form label > span:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .gen-form textarea {
@@ -546,6 +560,49 @@
   grid-column: 1 / -1;
 }
 
+.m-birthday-field {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+  background: var(--green-light);
+  border-radius: 8px;
+}
+
+.m-birthday-field label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.m-birthday-field label > span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.m-birthday-field select {
+  padding: 8px 10px;
+  border: 1px solid #d9d4c4;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  background: white;
+  width: 100%;
+}
+
+.m-birthday-field select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+@media (max-width: 768px) {
+  .m-birthday-field {
+    grid-template-columns: 1fr;
+  }
+}
+
 .sub-form-list:empty::before {
   content: "Belum ada data. Klik tombol + Tambah di atas.";
   color: var(--muted);
@@ -701,7 +758,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
+   }
 
 /* CAPTION FIELD */
 
@@ -877,7 +934,7 @@
   background: var(--green-light);
   border-color: var(--green);
   color: var(--green);
-}
+     }
 
 /* RESPONSIVE */
 
