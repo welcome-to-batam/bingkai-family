@@ -119,7 +119,7 @@ function renderPhoto(photo, name) {
   if (photo.startsWith("http://") ||
       photo.startsWith("https://") ||
       photo.startsWith("data:")) {
-    return '<img src="' + photo + '" alt="' + escapeAttr(name || "") + '" style="width:100%;height:100%;object-fit:cover">';
+    return '<img src="' + photo + '" alt="' + escapeAttr(name || "") + '">';
   }
   return escapeHtml(photo);
 }
