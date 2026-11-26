@@ -14,13 +14,13 @@
    ========================================================== */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-  authDomain: "bingkai-family.firebaseapp.com",
-  databaseURL: "https://bingkai-family-default-rtdb.firebaseio.com",
-  projectId: "bingkai-family",
-  storageBucket: "bingkai-family.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:abcdef0123456789"
+  apiKey: "AIzaSyC3f28O-x79T0DICMzAHO9oTl0uxvmxtLE",
+  authDomain: "bingkai-family-hartono.firebaseapp.com",
+  databaseURL: "https://bingkai-family-hartono-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "bingkai-family-hartono",
+  storageBucket: "bingkai-family-hartono.firebasestorage.app",
+  messagingSenderId: "579275237826",
+  appId: "1:579275237826:web:4bad74caf5d3482a74ce5b"
 };
 
 export { firebaseConfig };
