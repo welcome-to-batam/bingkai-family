@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#263d35">
-  <meta name="description" content="BINGKAI FAMILY - Admin Dashboard untuk mengelola album foto keluarga.">
+  <meta name="description" content="BINGKAI FAMILY - Admin Dashboard untuk mengelola album foto & generasi keluarga.">
 
   <title>Admin Dashboard - BINGKAI FAMILY</title>
 
@@ -15,7 +15,7 @@
 </head>
 <body>
 
-  <header class="header">
+<header class="header">
   <a href="index.html" class="brand">
     <span class="brand-icon">🌳</span>
     <span>
@@ -37,7 +37,7 @@
     <span></span>
   </button>
 
-    <nav class="navigation" id="navigation">
+  <nav class="navigation" id="navigation">
     <a href="index.html">Beranda</a>
     <a href="index.html#album">Album</a>
     <a href="index.html#fitur">Fitur</a>
@@ -50,74 +50,193 @@
 
   <div class="dashboard-header">
     <span class="section-label">DASHBOARD</span>
-    <h2>Kelola Album Keluarga</h2>
-    <p>Unggah foto baru dan kelola foto yang sudah ada.</p>
+    <h2>Kelola Keluarga</h2>
+    <p>Upload foto keluarga & kelola data generasi.</p>
   </div>
 
-  <!-- FORM UPLOAD -->
-  <div class="upload-card">
-    <h3>Tambah Foto Baru</h3>
+  <!-- TABS -->
+  <div class="dashboard-tabs">
+    <button type="button" class="tab-btn active" data-tab="album">
+      📸 Album Foto
+    </button>
+    <button type="button" class="tab-btn" data-tab="generasi">
+      🌳 Generasi Keluarga
+    </button>
+  </div>
 
-    <form id="uploadForm">
+  <!-- =================== ALBUM TAB =================== -->
+  <div class="tab-content active" id="tab-album">
 
-      <!-- Drop zone -->
-      <div
-        class="drop-zone"
-        id="dropZone"
-        tabindex="0"
-        role="button"
-        aria-label="Pilih atau seret foto ke sini">
-        <div class="drop-zone-icon">📸</div>
-        <div class="drop-zone-text">
-          <strong>Klik untuk memilih foto</strong>
-          <small>atau seret & lepas foto ke sini</small>
+    <div class="upload-card">
+      <h3>Tambah Foto Baru</h3>
+
+      <form id="uploadForm">
+
+        <div
+          class="drop-zone"
+          id="dropZone"
+          tabindex="0"
+          role="button"
+          aria-label="Pilih atau seret foto ke sini">
+          <div class="drop-zone-icon">📸</div>
+          <div class="drop-zone-text">
+            <strong>Klik untuk memilih foto</strong>
+            <small>atau seret & lepas foto ke sini</small>
+          </div>
+          <small class="drop-zone-hint">Format: JPG, PNG, GIF, WEBP — maks 10 MB (akan dikompres otomatis ke &lt;400 KB)</small>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            hidden
+            multiple>
         </div>
-        <small class="drop-zone-hint">Format: JPG, PNG, GIF, WEBP — maks 10 MB (akan dikompres otomatis ke &lt;400 KB)</small>
-        <input
-          type="file"
-          id="fileInput"
-          accept="image/*"
-          hidden
-          multiple>
+
+        <div class="file-preview" id="filePreview" hidden></div>
+
+        <label class="caption-field">
+          <span>Caption / Keterangan</span>
+          <input
+            type="text"
+            id="photoCaption"
+            placeholder="Contoh: Liburan keluarga di Batam, 2026"
+            maxlength="120">
+        </label>
+
+        <div class="upload-progress" id="uploadProgress" hidden>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <small id="progressText">Mengunggah... 0%</small>
+        </div>
+
+        <button type="submit" class="btn-primary btn-block" id="btnUpload" disabled>
+          Unggah Foto
+        </button>
+
+        <div class="upload-status" id="uploadStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="photo-list-card">
+      <div class="photo-list-header">
+        <h3>Foto Terupload</h3>
+        <button type="button" id="btnRefresh" class="btn-secondary btn-small">Muat Ulang</button>
       </div>
 
-      <!-- Preview file dipilih -->
-      <div class="file-preview" id="filePreview" hidden></div>
-
-      <!-- Caption -->
-      <label class="caption-field">
-        <span>Caption / Keterangan</span>
-        <input
-          type="text"
-          id="photoCaption"
-          placeholder="Contoh: Liburan keluarga di Batam, 2026"
-          maxlength="120">
-      </label>
-
-      <!-- Progress -->
-      <div class="upload-progress" id="uploadProgress" hidden>
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <small id="progressText">Mengunggah... 0%</small>
+      <div class="photo-grid" id="photoGrid">
+        <div class="photo-empty">Memuat foto...</div>
       </div>
+    </div>
 
-      <button type="submit" class="btn-primary btn-block" id="btnUpload" disabled>
-        Unggah Foto
-      </button>
-
-      <div class="upload-status" id="uploadStatus" role="status" aria-live="polite"></div>
-    </form>
   </div>
 
-  <!-- DAFTAR FOTO -->
-  <div class="photo-list-card">
-    <div class="photo-list-header">
-      <h3>Foto Terupload</h3>
-      <button type="button" id="btnRefresh" class="btn-secondary btn-small">Muat Ulang</button>
+  <!-- =================== GENERASI TAB =================== -->
+  <div class="tab-content" id="tab-generasi" hidden>
+
+    <!-- LIST VIEW -->
+    <div class="gen-list-container" id="genListContainer">
+      <div class="gen-list-header">
+        <h3>Daftar Generasi</h3>
+        <button type="button" id="btnAddGen" class="btn-primary btn-small">
+          + Tambah Generasi
+        </button>
+      </div>
+
+      <div class="gen-list" id="genList">
+        <div class="gen-empty">Memuat generasi...</div>
+      </div>
     </div>
 
-    <div class="photo-grid" id="photoGrid">
-      <div class="photo-empty">Memuat foto...</div>
+    <!-- FORM VIEW -->
+    <div class="gen-form-container" id="genFormContainer" hidden>
+      <div class="gen-list-header">
+        <h3 id="genFormTitle">Tambah Generasi Baru</h3>
+        <button type="button" id="btnCancelGen" class="btn-secondary btn-small">
+          ← Kembali ke Daftar
+        </button>
+      </div>
+
+      <form id="genForm" class="gen-form">
+
+        <div class="form-grid">
+          <label>
+            <span>ID Generasi *</span>
+            <input
+              type="text"
+              id="genId"
+              placeholder="gen1"
+              required
+              pattern="[a-zA-Z0-9\-]+">
+            <small>URL: <code>generasi.html?id=<strong>ID</strong></code></small>
+          </label>
+
+          <label>
+            <span>Judul *</span>
+            <input type="text" id="genTitle" placeholder="Generasi 1" required>
+          </label>
+
+          <label>
+            <span>Subtitle</span>
+            <input type="text" id="genSubtitle" placeholder="Pendiri Keluarga">
+          </label>
+
+          <label>
+            <span>Periode</span>
+            <input type="text" id="genPeriod" placeholder="1920 - 1980">
+          </label>
+
+          <label>
+            <span>Urutan</span>
+            <input type="number" id="genOrder" placeholder="1" min="1">
+            <small>1, 2, 3... untuk urutan tampil</small>
+          </label>
+
+          <label>
+            <span>Pengarang Quote</span>
+            <input type="text" id="genQuoteAuthor" placeholder="Kakek">
+          </label>
+        </div>
+
+        <label class="full-width">
+          <span>Quote</span>
+          <input type="text" id="genQuote" placeholder="Keluarga adalah akar yang menumbuhkan generasi.">
+        </label>
+
+        <label class="full-width">
+          <span>Cerita Generasi</span>
+          <textarea id="genStory" rows="5" placeholder="Kakek dan Nenek adalah awal mula keluarga besar kami..."></textarea>
+        </label>
+
+        <!-- MEMBERS -->
+        <div class="sub-form-section">
+          <div class="sub-form-header">
+            <h4>Anggota Generasi</h4>
+            <button type="button" id="btnAddMember" class="btn-secondary btn-small">
+              + Tambah Anggota
+            </button>
+          </div>
+          <div id="genMembersContainer" class="sub-form-list"></div>
+        </div>
+
+        <!-- MILESTONES -->
+        <div class="sub-form-section">
+          <div class="sub-form-header">
+            <h4>Linimasa (Milestone)</h4>
+            <button type="button" id="btnAddMilestone" class="btn-secondary btn-small">
+              + Tambah Milestone
+            </button>
+          </div>
+          <div id="genMilestonesContainer" class="sub-form-list"></div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="btnCancelGen2" class="btn-secondary">Batal</button>
+          <button type="submit" id="btnSaveGen" class="btn-primary">
+            Simpan Generasi
+          </button>
+        </div>
+      </form>
     </div>
+
   </div>
 
 </main>
@@ -128,8 +247,8 @@
   <small id="footerYear">© 2026 BINGKAI FAMILY. All Rights Reserved.</small>
 </footer>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 <script type="module" src="admin.js"></script>
 
 </body>
-</html>
+  </html>
