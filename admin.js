@@ -4,16 +4,20 @@
    Arsitektur (Spark plan / gratis):
      - Firebase Authentication : login admin (di login.html)
      - Realtime Database       : simpan foto sebagai base64 string
+                                 + data generasi keluarga
      - Firebase Storage        : TIDAK DIPAKAI (butuh Blaze plan)
 
    Halaman ini hanya dashboard. Auth guard akan redirect ke
    login.html kalau user belum login.
 
-   Optimasi upload (vs versi lama):
-     1. Kompresi lebih agresif (800px, JPEG q 0.5, max 400 KB)
-     2. Timeout 30 detik per upload — tidak menggantung selamanya
-     3. Pakai get() bukan onValue() — tidak re-download terus
-     4. Error message jelas untuk Permission denied / timeout
+   Fitur:
+     1. Album Foto: upload foto + daftar foto + hapus
+     2. Generasi Keluarga: CRUD generasi + anggota + milestone
+
+   Optimasi upload:
+     - Kompresi agresif (800px, JPEG q 0.5, max 400 KB)
+     - Timeout 30 detik per upload
+     - Pakai get() bukan onValue()
    ========================================================== */
 
 import { initializeApp } from
@@ -285,9 +289,9 @@ function estimateBase64Bytes(dataUrl) {
   const commaIdx = dataUrl.indexOf(",");
   if (commaIdx < 0) return 0;
   return Math.round((dataUrl.length - commaIdx - 1) * 0.75);
-   }
+}
 
- // =========================================================
+// =========================================================
 // 4. UTIL: TIMEOUT WRAPPER
 // =========================================================
 
@@ -314,10 +318,10 @@ uploadForm.addEventListener("submit", async (e) => {
   const user = auth.currentUser;
   if (!user) {
     setUploadStatus("Sesi habis. Silakan login ulang.", "error");
-   return;
+    return;
   }
-   
- btnUpload.disabled = true;
+
+  btnUpload.disabled = true;
   btnUpload.textContent = "Mengunggah...";
   uploadProgress.hidden = false;
 
@@ -331,7 +335,7 @@ uploadForm.addEventListener("submit", async (e) => {
     const pctBase = Math.round((i / selectedFiles.length) * 100);
     const pctRange = Math.round(100 / selectedFiles.length);
 
-   updateProgress(pctBase, "Memproses " + file.name);
+    updateProgress(pctBase, "Memproses " + file.name);
 
     try {
       // 1) Kompres foto
@@ -347,7 +351,7 @@ uploadForm.addEventListener("submit", async (e) => {
         "Menyimpan " + file.name + " ke database"
       );
 
-     const newPhotoRef = push(ref(db, "photos"));
+      const newPhotoRef = push(ref(db, "photos"));
       await withTimeout(
         set(newPhotoRef, {
           data: dataUrl,
@@ -363,7 +367,7 @@ uploadForm.addEventListener("submit", async (e) => {
           (DB_TIMEOUT / 1000) + " detik. Periksa koneksi internet."
       );
 
-     successCount++;
+      successCount++;
       updateProgress(pctBase + pctRange, "Selesai: " + file.name);
     } catch (err) {
       console.error("Upload error:", err);
@@ -380,7 +384,7 @@ uploadForm.addEventListener("submit", async (e) => {
     setUploadStatus(
       successCount + " foto berhasil diunggah!", "success"
     );
-     } else {
+  } else {
     setUploadStatus(
       successCount + " berhasil, " + failCount + " gagal. " +
       errors.join("; "),
@@ -399,7 +403,7 @@ uploadForm.addEventListener("submit", async (e) => {
   renderPreview();
   btnUpload.disabled = true;
 
-// Refresh daftar foto
+  // Refresh daftar foto
   loadPhotos();
 });
 
@@ -423,7 +427,7 @@ function friendlyDbError(err) {
       "ke Realtime Database > Rules, lalu Publish.";
   }
   if (/network|fetch|connection/i.test(msg)) {
-     return "Gangguan jaringan. Periksa koneksi internet.";
+    return "Gangguan jaringan. Periksa koneksi internet.";
   }
   if (/timeout/i.test(msg)) {
     return "Timeout. Koneksi terlalu lambat. Coba foto lebih kecil.";
@@ -442,6 +446,7 @@ function friendlyDbError(err) {
 // Penting: pakai get() supaya dashboard tidak re-download semua
 // foto terus-menerus. Refresh manual via tombol "Muat Ulang"
 // atau otomatis setelah upload selesai.
+
 btnRefresh.addEventListener("click", loadPhotos);
 
 async function loadPhotos() {
@@ -459,7 +464,7 @@ async function loadPhotos() {
       "Gagal memuat foto: timeout (koneksi lambat)."
     );
 
-   if (!snapshot.exists()) {
+    if (!snapshot.exists()) {
       photoGrid.innerHTML =
         '<div class="photo-empty">Belum ada foto. Upload foto pertamamu!</div>';
       return;
@@ -475,8 +480,7 @@ async function loadPhotos() {
     photoGrid.innerHTML = "";
     items.forEach((data) => {
       const card = createPhotoCard(data.id, data);
-
-    photoGrid.appendChild(card);
+      photoGrid.appendChild(card);
     });
   } catch (err) {
     console.error(err);
@@ -490,7 +494,7 @@ function createPhotoCard(id, data) {
   const card = document.createElement("article");
   card.className = "photo-item";
 
-const img = document.createElement("img");
+  const img = document.createElement("img");
   img.className = "photo-item-img";
   img.src = data.data; // base64 data URL
   img.alt = data.caption || data.name || "Foto keluarga";
@@ -517,8 +521,7 @@ const img = document.createElement("img");
   const btnView = document.createElement("button");
   btnView.className = "btn-view";
   btnView.textContent = "Lihat";
-
-btnView.addEventListener("click", () => {
+  btnView.addEventListener("click", () => {
     const w = window.open("");
     if (w) {
       w.document.write(
@@ -529,7 +532,7 @@ btnView.addEventListener("click", () => {
     }
   });
 
-   const btnDelete = document.createElement("button");
+  const btnDelete = document.createElement("button");
   btnDelete.className = "btn-delete";
   btnDelete.textContent = "Hapus";
   btnDelete.addEventListener("click", () => deletePhoto(id, data));
@@ -587,3 +590,304 @@ if (footerYear) {
 }
 
 console.log("BINGKAI FAMILY Dashboard siap (RTDB mode, optimized).");
+
+// =========================================================
+// 8. TAB SWITCHING (Album ↔ Generasi)
+// =========================================================
+
+const tabBtns = document.querySelectorAll(".tab-btn");
+const tabContents = document.querySelectorAll(".tab-content");
+
+tabBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const tab = btn.dataset.tab;
+    tabBtns.forEach((b) => b.classList.toggle("active", b === btn));
+    tabContents.forEach((c) => {
+      const isActive = c.id === "tab-" + tab;
+      c.classList.toggle("active", isActive);
+      c.hidden = !isActive;
+    });
+
+    if (tab === "generasi") {
+      loadGenerations();
+    }
+  });
+});
+
+// =========================================================
+// 9. GENERASI CRUD
+// =========================================================
+
+const genList = document.getElementById("genList");
+const genListContainer = document.getElementById("genListContainer");
+const genFormContainer = document.getElementById("genFormContainer");
+const genForm = document.getElementById("genForm");
+const genFormTitle = document.getElementById("genFormTitle");
+const btnAddGen = document.getElementById("btnAddGen");
+const btnAddMember = document.getElementById("btnAddMember");
+const btnAddMilestone = document.getElementById("btnAddMilestone");
+const btnCancelGen = document.getElementById("btnCancelGen");
+const btnCancelGen2 = document.getElementById("btnCancelGen2");
+const btnSaveGen = document.getElementById("btnSaveGen");
+const genMembersContainer = document.getElementById("genMembersContainer");
+const genMilestonesContainer = document.getElementById("genMilestonesContainer");
+
+btnAddGen?.addEventListener("click", () => showGenForm(null));
+btnCancelGen?.addEventListener("click", cancelGenForm);
+btnCancelGen2?.addEventListener("click", cancelGenForm);
+btnAddMember?.addEventListener("click", () => addGenMemberRow(null));
+btnAddMilestone?.addEventListener("click", () => addGenMilestoneRow(null));
+
+// Load daftar generasi
+async function loadGenerations() {
+  if (!genList) return;
+  genList.innerHTML = '<div class="gen-empty">Memuat generasi...</div>';
+
+  try {
+    const snap = await withTimeout(
+      get(query(ref(db, "generations"), orderByChild("order"))),
+      DB_TIMEOUT,
+      "Gagal memuat generasi: timeout."
+    );
+
+    if (!snap.exists()) {
+      genList.innerHTML =
+        '<div class="gen-empty">Belum ada generasi. Klik "+ Tambah Generasi" untuk membuat.</div>';
+      return;
+    }
+
+    const gens = [];
+    snap.forEach((child) => {
+      gens.push({ id: child.key, ...child.val() });
+    });
+
+    genList.innerHTML = "";
+    gens.forEach((g) => {
+      const memberCount = g.members ? Object.keys(g.members).length : 0;
+      const card = document.createElement("div");
+      card.className = "gen-list-card";
+      card.innerHTML = `
+        <div class="gen-list-info">
+          <strong>${escapeHtml(g.title || "(tanpa judul)")}</strong>
+          ${g.subtitle ? `<span>${escapeHtml(g.subtitle)}</span>` : ""}
+          <small>${escapeHtml(g.period || "")} • ${memberCount} anggota • ID: <code>${escapeHtml(g.id)}</code></small>
+        </div>
+        <div class="gen-list-actions">
+          <button type="button" class="btn-edit">Edit</button>
+          <button type="button" class="btn-delete">Hapus</button>
+        </div>
+      `;
+      card.querySelector(".btn-edit").addEventListener("click", () => showGenForm(g));
+      card.querySelector(".btn-delete").addEventListener("click", () => deleteGeneration(g.id, g.title));
+      genList.appendChild(card);
+    });
+  } catch (err) {
+    console.error("[Generasi] Load error:", err);
+    genList.innerHTML =
+      '<div class="gen-empty">Gagal memuat: ' + friendlyDbError(err) + "</div>";
+  }
+}
+
+// Tampilkan form (empty untuk baru, filled untuk edit)
+function showGenForm(gen) {
+  genListContainer.hidden = true;
+  genFormContainer.hidden = false;
+
+  genFormTitle.textContent = gen
+    ? "Edit Generasi"
+    : "Tambah Generasi Baru";
+
+  const idField = document.getElementById("genId");
+  idField.value = gen ? gen.id : "";
+  idField.readOnly = !!gen;
+
+  document.getElementById("genTitle").value = gen ? (gen.title || "") : "";
+  document.getElementById("genSubtitle").value = gen ? (gen.subtitle || "") : "";
+  document.getElementById("genPeriod").value = gen ? (gen.period || "") : "";
+  document.getElementById("genOrder").value = gen ? (gen.order || "") : "";
+  document.getElementById("genStory").value = gen ? (gen.story || "") : "";
+  document.getElementById("genQuote").value = gen ? (gen.quote || "") : "";
+  document.getElementById("genQuoteAuthor").value = gen ? (gen.quoteAuthor || "") : "";
+
+  // Render members
+  genMembersContainer.innerHTML = "";
+  if (gen && gen.members) {
+    Object.entries(gen.members).forEach(([key, m]) => {
+      addGenMemberRow({ ...m, _key: key });
+    });
+  }
+
+  // Render milestones
+  genMilestonesContainer.innerHTML = "";
+  if (gen && gen.milestones) {
+    Object.entries(gen.milestones).forEach(([key, ms]) => {
+      addGenMilestoneRow({ ...ms, _key: key });
+    });
+  }
+}
+
+function cancelGenForm() {
+  genListContainer.hidden = false;
+  genFormContainer.hidden = true;
+}
+
+// Tambah row anggota generasi
+function addGenMemberRow(member) {
+  const row = document.createElement("div");
+  row.className = "sub-form-row";
+  row.dataset.subId = member && member._key
+    ? member._key
+    : "m" + Date.now() + Math.random().toString(36).slice(2, 6);
+
+  row.innerHTML = `
+    <input type="text" class="m-name" placeholder="Nama panggilan"
+      value="${escapeAttr(member ? member.name : "")}">
+    <input type="text" class="m-fullname" placeholder="Nama lengkap"
+      value="${escapeAttr(member ? member.fullName : "")}">
+    <input type="text" class="m-photo" placeholder="Emoji (👴) atau URL foto"
+      value="${escapeAttr(member ? member.photo : "")}">
+    <input type="text" class="m-birth" placeholder="Tahun lahir"
+      value="${escapeAttr(member ? member.birthYear : "")}">
+    <input type="text" class="m-death" placeholder="Tahun wafat (kosongkan jika masih hidup)"
+      value="${escapeAttr(member ? member.deathYear : "")}">
+    <textarea class="m-bio" placeholder="Bio singkat">${escapeHtml(member ? (member.bio || "") : "")}</textarea>
+    <button type="button" class="btn-remove-row">Hapus Anggota</button>
+  `;
+
+  row.querySelector(".btn-remove-row").addEventListener("click", () => row.remove());
+  genMembersContainer.appendChild(row);
+}
+
+// Tambah row milestone
+function addGenMilestoneRow(milestone) {
+  const row = document.createElement("div");
+  row.className = "sub-form-row";
+  row.dataset.subId = milestone && milestone._key
+    ? milestone._key
+    : "ms" + Date.now() + Math.random().toString(36).slice(2, 6);
+
+  row.innerHTML = `
+    <input type="text" class="ms-year" placeholder="Tahun (contoh: 1945)"
+      value="${escapeAttr(milestone ? milestone.year : "")}">
+    <input type="text" class="ms-event" placeholder="Event / milestone"
+      value="${escapeAttr(milestone ? milestone.event : "")}">
+    <button type="button" class="btn-remove-row">Hapus Milestone</button>
+  `;
+
+  row.querySelector(".btn-remove-row").addEventListener("click", () => row.remove());
+  genMilestonesContainer.appendChild(row);
+}
+
+// Submit form generasi
+genForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const id = document.getElementById("genId").value.trim();
+  if (!id) {
+    alert("ID generasi wajib diisi (misal: gen1, gen2).");
+    return;
+  }
+  if (!/^[a-zA-Z0-9\-]+$/.test(id)) {
+    alert("ID hanya boleh huruf, angka, dan tanda hubung. Tanpa spasi.");
+    return;
+  }
+
+  const title = document.getElementById("genTitle").value.trim();
+  if (!title) {
+    alert("Judul wajib diisi.");
+    return;
+  }
+
+  // Kumpulkan data
+  const data = {
+    title: title,
+    subtitle: document.getElementById("genSubtitle").value.trim(),
+    period: document.getElementById("genPeriod").value.trim(),
+    order: parseInt(document.getElementById("genOrder").value) || 1,
+    story: document.getElementById("genStory").value.trim(),
+    quote: document.getElementById("genQuote").value.trim(),
+    quoteAuthor: document.getElementById("genQuoteAuthor").value.trim(),
+    members: {},
+    milestones: {}
+  };
+
+  // Kumpulkan members
+  genMembersContainer.querySelectorAll(".sub-form-row").forEach((row) => {
+    const subId = row.dataset.subId;
+    data.members[subId] = {
+      name: row.querySelector(".m-name").value.trim(),
+      fullName: row.querySelector(".m-fullname").value.trim(),
+      photo: row.querySelector(".m-photo").value.trim(),
+      birthYear: row.querySelector(".m-birth").value.trim(),
+      deathYear: row.querySelector(".m-death").value.trim(),
+      bio: row.querySelector(".m-bio").value.trim()
+    };
+  });
+
+  // Kumpulkan milestones
+  genMilestonesContainer.querySelectorAll(".sub-form-row").forEach((row) => {
+    const subId = row.dataset.subId;
+    data.milestones[subId] = {
+      year: row.querySelector(".ms-year").value.trim(),
+      event: row.querySelector(".ms-event").value.trim()
+    };
+  });
+
+  // Save
+  btnSaveGen.disabled = true;
+  btnSaveGen.textContent = "Menyimpan...";
+
+  try {
+    await withTimeout(
+      set(ref(db, "generations/" + id), data),
+      DB_TIMEOUT,
+      "Timeout menyimpan generasi."
+    );
+    alert("Generasi berhasil disimpan!");
+    cancelGenForm();
+    loadGenerations();
+  } catch (err) {
+    console.error("[Generasi] Save error:", err);
+    alert("Gagal menyimpan: " + friendlyDbError(err));
+  } finally {
+    btnSaveGen.disabled = false;
+    btnSaveGen.textContent = "Simpan Generasi";
+  }
+});
+
+// Hapus generasi
+async function deleteGeneration(id, title) {
+  if (!confirm('Hapus generasi "' + (title || id) + '"? Tindakan tidak bisa dibatalkan.')) return;
+
+  try {
+    await withTimeout(
+      remove(ref(db, "generations/" + id)),
+      DB_TIMEOUT,
+      "Gagal menghapus: timeout."
+    );
+    loadGenerations();
+  } catch (err) {
+    console.error("[Generasi] Delete error:", err);
+    alert("Gagal menghapus: " + friendlyDbError(err));
+  }
+}
+
+// =========================================================
+// 10. UTIL HTML ESCAPE
+// =========================================================
+
+function escapeHtml(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str);
+}
+
+console.log("BINGKAI FAMILY Dashboard: modul generasi siap.");
