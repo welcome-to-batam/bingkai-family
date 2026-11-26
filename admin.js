@@ -186,7 +186,7 @@ function renderPreview() {
     item.appendChild(name);
     filePreview.appendChild(item);
   });
-}
+     }
 
 // =========================================================
 // 3. KOMPRESI FOTO (CANVAS) — AGRESIF
@@ -330,7 +330,7 @@ function compressProfilePhoto(file) {
         ctx.fillRect(0, 0, targetSize, targetSize);
         ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
 
-        // Coba quality utama
+         // Coba quality utama
         let dataUrl = canvas.toDataURL("image/jpeg", 0.75);
         let sizeBytes = estimateBase64Bytes(dataUrl);
 
@@ -435,7 +435,7 @@ uploadForm.addEventListener("submit", async (e) => {
           (DB_TIMEOUT / 1000) + " detik. Periksa koneksi internet."
       );
 
-      successCount++;
+     successCount++;
       updateProgress(pctBase + pctRange, "Selesai: " + file.name);
     } catch (err) {
       console.error("Upload error:", err);
@@ -600,7 +600,7 @@ function createPhotoCard(id, data) {
     }
   });
 
-  const btnDelete = document.createElement("button");
+const btnDelete = document.createElement("button");
   btnDelete.className = "btn-delete";
   btnDelete.textContent = "Hapus";
   btnDelete.addEventListener("click", () => deletePhoto(id, data));
@@ -678,6 +678,10 @@ tabBtns.forEach((btn) => {
 
     if (tab === "generasi") {
       loadGenerations();
+    } else if (tab === "kalender") {
+      loadEvents();
+    } else if (tab === "sejarah") {
+      loadArticles();
     }
   });
 });
@@ -754,7 +758,7 @@ async function loadGenerations() {
     genList.innerHTML =
       '<div class="gen-empty">Gagal memuat: ' + friendlyDbError(err) + "</div>";
   }
-}
+       }
 
 // Tampilkan form (empty untuk baru, filled untuk edit)
 function showGenForm(gen) {
@@ -807,6 +811,12 @@ function addGenMemberRow(member) {
     ? member._key
     : "m" + Date.now() + Math.random().toString(36).slice(2, 6);
 
+  const birthMonth = member ? (member.birthMonth || "") : "";
+  const birthDay = member ? (member.birthDay || "") : "";
+
+  const monthOptions = buildMonthOptions(birthMonth);
+  const dayOptions = buildDayOptions(birthDay);
+
   row.innerHTML = `
     <div class="member-photo-field">
       <div class="member-photo-preview">👤</div>
@@ -817,21 +827,33 @@ function addGenMemberRow(member) {
       </div>
     </div>
     <input type="text" class="m-photo" placeholder="Atau ketik emoji (👴) atau URL foto"
-
-    value="${escapeAttr(member ? member.photo : "")}">
+      value="${escapeAttr(member ? member.photo : "")}">
     <input type="text" class="m-name" placeholder="Nama panggilan"
       value="${escapeAttr(member ? member.name : "")}">
     <input type="text" class="m-fullname" placeholder="Nama lengkap"
       value="${escapeAttr(member ? member.fullName : "")}">
-    <input type="text" class="m-birth" placeholder="Tahun lahir"
+    <input type="text" class="m-birth-year" placeholder="Tahun lahir (1925)"
       value="${escapeAttr(member ? member.birthYear : "")}">
-    <input type="text" class="m-death" placeholder="Tahun wafat (kosongkan jika masih hidup)"
+    <input type="text" class="m-death-year" placeholder="Tahun wafat (kosongkan jika masih hidup)"
       value="${escapeAttr(member ? member.deathYear : "")}">
+    <div class="m-birthday-field">
+      <label><span>🎂 Bulan Lahir</span>
+        <select class="m-birth-month">
+          <option value="">— (opsional) —</option>
+          ${monthOptions}
+        </select>
+      </label>
+      <label><span>Tanggal</span>
+        <select class="m-birth-day">
+          <option value="">—</option>
+          ${dayOptions}
+        </select>
+      </label>
+    </div>
     <textarea class="m-bio" placeholder="Bio singkat">${escapeHtml(member ? (member.bio || "") : "")}</textarea>
     <button type="button" class="btn-remove-row">Hapus Anggota</button>
-  `;
 
-  // Wire up photo upload
+    // Wire up photo upload
   const photoInput = row.querySelector(".m-photo");
   const photoFile = row.querySelector(".m-photo-file");
   const preview = row.querySelector(".member-photo-preview");
@@ -956,14 +978,27 @@ genForm?.addEventListener("submit", async (e) => {
   // Kumpulkan members
   genMembersContainer.querySelectorAll(".sub-form-row").forEach((row) => {
     const subId = row.dataset.subId;
-    data.members[subId] = {
+    const birthMonthVal = row.querySelector(".m-birth-month") ? row.querySelector(".m-birth-month").value : "";
+    const birthDayVal = row.querySelector(".m-birth-day") ? row.querySelector(".m-birth-day").value : "";
+
+    const memberData = {
       name: row.querySelector(".m-name").value.trim(),
       fullName: row.querySelector(".m-fullname").value.trim(),
       photo: row.querySelector(".m-photo").value.trim(),
-      birthYear: row.querySelector(".m-birth").value.trim(),
-      deathYear: row.querySelector(".m-death").value.trim(),
+      birthYear: row.querySelector(".m-birth-year").value.trim(),
+      deathYear: row.querySelector(".m-death-year").value.trim(),
       bio: row.querySelector(".m-bio").value.trim()
     };
+
+    // Hanya simpan birthday kalau diisi (untuk auto-populate kalender)
+    if (birthMonthVal) {
+      memberData.birthMonth = parseInt(birthMonthVal);
+    }
+    if (birthDayVal) {
+      memberData.birthDay = parseInt(birthDayVal);
+    }
+
+    data.members[subId] = memberData;
   });
 
   // Kumpulkan milestones
@@ -1012,9 +1047,9 @@ async function deleteGeneration(id, title) {
     console.error("[Generasi] Delete error:", err);
     alert("Gagal menghapus: " + friendlyDbError(err));
   }
-}
+         }
 
-// =========================================================
+         // =========================================================
 // 10. UTIL HTML ESCAPE
 // =========================================================
 
@@ -1032,4 +1067,320 @@ function escapeAttr(str) {
   return escapeHtml(str);
 }
 
+// Helper: build <option> untuk dropdown bulan (1-12)
+function buildMonthOptions(selected) {
+  const months = [
+    "Januari","Februari","Maret","April","Mei","Juni",
+    "Juli","Agustus","September","Oktober","November","Desember"
+  ];
+  let html = "";
+  for (let i = 0; i < 12; i++) {
+    const val = i + 1;
+    const sel = String(selected) === String(val) ? " selected" : "";
+    html += `<option value="${val}"${sel}>${months[i]}</option>`;
+  }
+  return html;
+}
+
+// Helper: build <option> untuk dropdown tanggal (1-31)
+function buildDayOptions(selected) {
+  let html = "";
+  for (let i = 1; i <= 31; i++) {
+    const sel = String(selected) === String(i) ? " selected" : "";
+    html += `<option value="${i}"${sel}>${i}</option>`;
+  }
+  return html;
+}
+
 console.log("BINGKAI FAMILY Dashboard: modul generasi siap.");
+
+// =========================================================
+// 11. EVENTS CRUD (Kalender Keluarga)
+// =========================================================
+
+const eventList = document.getElementById("eventList");
+const eventListContainer = document.querySelector("#tab-kalender .gen-list-container");
+const eventFormContainer = document.getElementById("eventFormContainer");
+const eventForm = document.getElementById("eventForm");
+const eventFormTitle = document.getElementById("eventFormTitle");
+const btnAddEvent = document.getElementById("btnAddEvent");
+const btnCancelEvent = document.getElementById("btnCancelEvent");
+const btnCancelEvent2 = document.getElementById("btnCancelEvent2");
+const btnSaveEvent = document.getElementById("btnSaveEvent");
+
+let editingEventId = null;
+
+btnAddEvent?.addEventListener("click", () => showEventForm(null));
+btnCancelEvent?.addEventListener("click", cancelEventForm);
+btnCancelEvent2?.addEventListener("click", cancelEventForm);
+
+async function loadEvents() {
+  if (!eventList) return;
+  eventList.innerHTML = '<div class="gen-empty">Memuat acara...</div>';
+
+  try {
+    const snap = await get(ref(db, "events"));
+
+    if (!snap.exists()) {
+      eventList.innerHTML =
+        '<div class="gen-empty">Belum ada acara. Klik "+ Tambah Acara" untuk membuat.</div>';
+      return;
+    }
+
+    const events = [];
+    snap.forEach((child) => {
+      events.push({ id: child.key, ...child.val() });
+    });
+
+    // Sort by date
+    events.sort((a, b) => {
+      const da = a.date || "";
+      const db = b.date || "";
+      return da.localeCompare(db);
+    });
+
+    eventList.innerHTML = "";
+    events.forEach((e) => {
+      const card = document.createElement("div");
+      card.className = "gen-list-card";
+      const typeLabel = {
+        birthday: "🎂 Ulang Tahun",
+        anniversary: "💍 Anniversary",
+        reunion: "👨‍👩‍👧‍👦 Reuni",
+        other: "📅 Acara"
+      }[e.type] || "📅 Acara";
+
+      card.innerHTML = `
+        <div class="gen-list-info">
+          <strong>${escapeHtml(e.title || "(tanpa judul)")}</strong>
+          <span>${escapeHtml(e.date || "")} • ${escapeHtml(typeLabel)}</span>
+          <small>${e.yearly ? "Ulang tahunan • " : ""}${escapeHtml(e.description || "")}</small>
+        </div>
+        <div class="gen-list-actions">
+          <button type="button" class="btn-edit">Edit</button>
+          <button type="button" class="btn-delete">Hapus</button>
+        </div>
+      `;
+      card.querySelector(".btn-edit").addEventListener("click", () => showEventForm(e));
+      card.querySelector(".btn-delete").addEventListener("click", () => deleteEvent(e.id, e.title));
+      eventList.appendChild(card);
+    });
+  } catch (err) {
+    console.error("[Events] Load error:", err);
+    eventList.innerHTML =
+      '<div class="gen-empty">Gagal memuat: ' + friendlyDbError(err) + "</div>";
+  }
+}
+
+function showEventForm(event) {
+  if (eventListContainer) eventListContainer.hidden = true;
+  eventFormContainer.hidden = false;
+
+  eventFormTitle.textContent = event ? "Edit Acara" : "Tambah Acara Baru";
+  editingEventId = event ? event.id : null;
+
+  document.getElementById("eventDate").value = event ? (event.date || "") : "";
+  document.getElementById("eventType").value = event ? (event.type || "other") : "other";
+  document.getElementById("eventTitle").value = event ? (event.title || "") : "";
+  document.getElementById("eventDesc").value = event ? (event.description || "") : "";
+  document.getElementById("eventYearly").checked = event ? !!event.yearly : false;
+}
+
+function cancelEventForm() {
+  if (eventListContainer) eventListContainer.hidden = false;
+  eventFormContainer.hidden = true;
+  editingEventId = null;
+}
+
+eventForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const data = {
+    date: document.getElementById("eventDate").value,
+    type: document.getElementById("eventType").value,
+    title: document.getElementById("eventTitle").value.trim(),
+    description: document.getElementById("eventDesc").value.trim(),
+    yearly: document.getElementById("eventYearly").checked,
+    createdAt: Date.now()
+  };
+
+  if (!data.date || !data.title) {
+    alert("Tanggal dan judul wajib diisi.");
+    return;
+  }
+
+  btnSaveEvent.disabled = true;
+  btnSaveEvent.textContent = "Menyimpan...";
+
+  try {
+    if (editingEventId) {
+      await set(ref(db, "events/" + editingEventId), data);
+    } else {
+      const newRef = push(ref(db, "events"));
+      await set(newRef, data);
+    }
+    alert("Acara berhasil disimpan!");
+    cancelEventForm();
+    loadEvents();
+  } catch (err) {
+    alert("Gagal menyimpan: " + friendlyDbError(err));
+  } finally {
+    btnSaveEvent.disabled = false;
+    btnSaveEvent.textContent = "Simpan Acara";
+  }
+});
+
+async function deleteEvent(id, title) {
+  if (!confirm('Hapus acara "' + (title || id) + '"?')) return;
+  try {
+    await remove(ref(db, "events/" + id));
+    loadEvents();
+  } catch (err) {
+    alert("Gagal menghapus: " + friendlyDbError(err));
+  }
+   }
+
+// =========================================================
+// 12. HISTORY ARTICLES CRUD (Sejarah Keluarga)
+// =========================================================
+
+const articleList = document.getElementById("articleList");
+const articleListContainer = document.querySelector("#tab-sejarah .gen-list-container");
+const articleFormContainer = document.getElementById("articleFormContainer");
+const articleForm = document.getElementById("articleForm");
+const articleFormTitle = document.getElementById("articleFormTitle");
+const btnAddArticle = document.getElementById("btnAddArticle");
+const btnCancelArticle = document.getElementById("btnCancelArticle");
+const btnCancelArticle2 = document.getElementById("btnCancelArticle2");
+const btnSaveArticle = document.getElementById("btnSaveArticle");
+
+let editingArticleId = null;
+
+btnAddArticle?.addEventListener("click", () => showArticleForm(null));
+btnCancelArticle?.addEventListener("click", cancelArticleForm);
+btnCancelArticle2?.addEventListener("click", cancelArticleForm);
+
+async function loadArticles() {
+  if (!articleList) return;
+  articleList.innerHTML = '<div class="gen-empty">Memuat artikel...</div>';
+
+  try {
+    const snap = await get(ref(db, "history"));
+
+    if (!snap.exists()) {
+      articleList.innerHTML =
+        '<div class="gen-empty">Belum ada artikel. Klik "+ Tambah Artikel" untuk membuat.</div>';
+      return;
+    }
+
+    const articles = [];
+    snap.forEach((child) => {
+      articles.push({ id: child.key, ...child.val() });
+    });
+
+    articles.sort((a, b) => {
+      const ta = a.createdAt || 0;
+      const tb = b.createdAt || 0;
+      return tb - ta;
+    });
+
+    articleList.innerHTML = "";
+    articles.forEach((a) => {
+      const card = document.createElement("div");
+      card.className = "gen-list-card";
+      const dateStr = a.createdAt
+        ? new Date(a.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
+        : "";
+
+      card.innerHTML = `
+        <div class="gen-list-info">
+          <strong>${escapeHtml(a.title || "(tanpa judul)")}</strong>
+          ${a.category ? `<span>${escapeHtml(a.category)}</span>` : ""}
+          <small>${escapeHtml(dateStr)} • ${escapeHtml(a.excerpt || "").slice(0, 60)}${(a.excerpt || "").length > 60 ? "..." : ""}</small>
+        </div>
+        <div class="gen-list-actions">
+          <button type="button" class="btn-edit">Edit</button>
+          <button type="button" class="btn-delete">Hapus</button>
+        </div>
+      `;
+      card.querySelector(".btn-edit").addEventListener("click", () => showArticleForm(a));
+      card.querySelector(".btn-delete").addEventListener("click", () => deleteArticle(a.id, a.title));
+      articleList.appendChild(card);
+    });
+  } catch (err) {
+    console.error("[Articles] Load error:", err);
+    articleList.innerHTML =
+      '<div class="gen-empty">Gagal memuat: ' + friendlyDbError(err) + "</div>";
+  }
+}
+
+function showArticleForm(article) {
+  if (articleListContainer) articleListContainer.hidden = true;
+  articleFormContainer.hidden = false;
+
+  articleFormTitle.textContent = article ? "Edit Artikel" : "Tambah Artikel Baru";
+  editingArticleId = article ? article.id : null;
+
+  document.getElementById("articleTitle").value = article ? (article.title || "") : "";
+  document.getElementById("articleCategory").value = article ? (article.category || "asal-usul") : "asal-usul";
+  document.getElementById("articleExcerpt").value = article ? (article.excerpt || "") : "";
+  document.getElementById("articleBody").value = article ? (article.body || "") : "";
+}
+
+function cancelArticleForm() {
+  if (articleListContainer) articleListContainer.hidden = false;
+  articleFormContainer.hidden = true;
+  editingArticleId = null;
+}
+
+articleForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const user = auth.currentUser;
+  const data = {
+    title: document.getElementById("articleTitle").value.trim(),
+    category: document.getElementById("articleCategory").value,
+    excerpt: document.getElementById("articleExcerpt").value.trim(),
+    body: document.getElementById("articleBody").value.trim(),
+    author: user ? user.email : "admin",
+    createdAt: Date.now()
+  };
+
+  if (!data.title || !data.body) {
+    alert("Judul dan isi artikel wajib diisi.");
+    return;
+  }
+
+  btnSaveArticle.disabled = true;
+  btnSaveArticle.textContent = "Menyimpan...";
+
+  try {
+    if (editingArticleId) {
+      await set(ref(db, "history/" + editingArticleId), data);
+    } else {
+      const newRef = push(ref(db, "history"));
+      await set(newRef, data);
+    }
+    alert("Artikel berhasil disimpan!");
+    cancelArticleForm();
+    loadArticles();
+  } catch (err) {
+    alert("Gagal menyimpan: " + friendlyDbError(err));
+  } finally {
+    btnSaveArticle.disabled = false;
+    btnSaveArticle.textContent = "Simpan Artikel";
+  }
+});
+
+async function deleteArticle(id, title) {
+  if (!confirm('Hapus artikel "' + (title || id) + '"?')) return;
+  try {
+    await remove(ref(db, "history/" + id));
+    loadArticles();
+  } catch (err) {
+    alert("Gagal menghapus: " + friendlyDbError(err));
+  }
+}
+
+console.log("BINGKAI FAMILY Dashboard: modul events + sejarah siap.");
+       
