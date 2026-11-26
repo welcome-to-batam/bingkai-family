@@ -852,6 +852,7 @@ function addGenMemberRow(member) {
     </div>
     <textarea class="m-bio" placeholder="Bio singkat">${escapeHtml(member ? (member.bio || "") : "")}</textarea>
     <button type="button" class="btn-remove-row">Hapus Anggota</button>
+  `;
 
     // Wire up photo upload
   const photoInput = row.querySelector(".m-photo");
