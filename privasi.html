@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#263d35">
+  <meta name="description" content="BINGKAI FAMILY - Kebijakan privasi & perlindungan data keluarga.">
+  <title>Privasi Keluarga - BINGKAI FAMILY</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="features.css">
+  <link rel="icon" href="assets/icon-192.png">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="brand">
+    <span class="brand-icon">🌳</span>
+    <span><strong>BINGKAI FAMILY</strong><small>Privasi Keluarga</small></span>
+  </a>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="navigation" id="navigation">
+    <a href="index.html">Beranda</a>
+    <a href="pohon.html">Silsilah</a>
+    <a href="anggota.html">Anggota</a>
+    <a href="login.html" class="admin-link">Login Admin</a>
+  </nav>
+</header>
+
+<main class="feature-main">
+  <section class="feature-hero">
+    <span class="feature-eyebrow">✦ FAMILY PRIVACY</span>
+    <h1>Privasi Keluarga</h1>
+    <p>Komitmen kami melindungi data dan cerita keluarga Anda.</p>
+  </section>
+
+  <section class="feature-content">
+    <div class="privasi-content">
+
+      <div class="privasi-section">
+        <h2>🔒 Data Publik vs Privat</h2>
+        <p>Situs BINGKAI FAMILY membedakan dua jenis data:</p>
+        <ul>
+          <li><strong>Data Publik</strong> — dapat diakses siapa saja tanpa login:
+            <ul>
+              <li>Foto album keluarga</li>
+              <li>Nama & profil anggota keluarga (nama panggilan, nama lengkap, tahun lahir/wafat, bio)</li>
+              <li>Cerita & sejarah keluarga</li>
+              <li>Data generasi (judul, periode, milestone)</li>
+              <li>Acara kalender keluarga</li>
+            </ul>
+          </li>
+          <li><strong>Data Privat</strong> — hanya dapat diakses admin yang login:
+            <ul>
+              <li>Form upload foto & kelola album</li>
+              <li>Form tambah/edit/hapus data generasi & anggota</li>
+              <li>Form tambah/edit/hapus acara kalender</li>
+              <li>Form tambah/edit/hapus artikel sejarah</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="privasi-section">
+        <h2>⚖️ Hak Anda</h2>
+        <p>Sebagai anggota keluarga, Anda memiliki hak berikut:</p>
+        <ul>
+          <li><strong>Hak Akses</strong> — Anda dapat melihat semua data publik kapan saja.</li>
+          <li><strong>Hak Koreksi</strong> — jika data Anda (nama, bio, foto) salah atau tidak akurat, Anda dapat meminta koreksi.</li>
+          <li><strong>Hak Penghapusan</strong> — Anda dapat meminta penghapusan data pribadi Anda dari situs.</li>
+          <li><strong>Hak Pembatasan</strong> — Anda dapat meminta agar data tertentu (misal tahun lahir) disembunyikan.</li>
+        </ul>
+      </div>
+
+      <div class="privasi-section">
+        <h2>🔐 Keamanan Data</h2>
+        <p>Data keluarga disimpan menggunakan <strong>Firebase Realtime Database</strong> dengan konfigurasi keamanan:</p>
+        <ul>
+          <li>Data publik (foto, profil, cerita) dapat dibaca semua orang.</li>
+          <li>Penulisan & penghapusan data hanya bisa dilakukan oleh admin yang sudah login.</li>
+          <li>Path database di luar data keluarga (photos, generations, events, history) diblokir total.</li>
+          <li>Foto dikompres otomatis sebelum disimpan untuk efisiensi & privasi (metadata EXIF dibuang).</li>
+        </ul>
+      </div>
+
+      <div class="privasi-section">
+        <h2>📞 Cara Menghubungi Admin</h2>
+        <p>Untuk permintaan terkait privasi (koreksi, penghapusan, pembatasan data), hubungi admin keluarga:</p>
+        <div class="privasi-contact">
+          <strong>Email Admin:</strong>
+          <a href="mailto:admin@bingkai.family">admin@bingkai.family</a>
+          <br><br>
+          <strong>Atau langsung:</strong>
+          Hubungi admin keluarga secara langsung melalui WhatsApp atau pertemuan keluarga.
+          <br><br>
+          <strong>Waktu Respons:</strong>
+          Permintaan privasi akan diproses dalam waktu maksimal 7 hari kerja.
+        </div>
+      </div>
+
+      <div class="privasi-section">
+        <h2>📋 Kebijakan Penggunaan</h2>
+        <p>Dengan mengakses situs BINGKAI FAMILY, Anda setuju dengan kebijakan berikut:</p>
+        <ul>
+          <li>Situs ini diperuntukkan bagi anggota keluarga dan kerabat dekat.</li>
+          <li>Jangan menyebarluaskan foto atau data pribadi keluarga ke pihak luar tanpa izin.</li>
+          <li>Foto & cerita yang dipublikasikan di sini adalah milik keluarga — minta izin admin sebelum menggunakan di luar situs.</li>
+          <li>Admin berhak menghapus konten yang dianggap tidak pantas atau melanggar privasi anggota lain.</li>
+        </ul>
+      </div>
+
+      <div class="privasi-section">
+        <h2>🔄 Perubahan Kebijakan</h2>
+        <p>Kebijakan privasi ini dapat diperbarui dari waktu ke waktu. Perubahan akan diumumkan melalui:</p>
+        <ul>
+          <li>Grup keluarga WhatsApp</li>
+          <li>Pemberitahuan di halaman beranda situs</li>
+          <li>Email ke anggota yang terdaftar</li>
+        </ul>
+        <p>Tanggal pembaruan terakhir: <strong>2026</strong></p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <strong>BINGKAI FAMILY</strong>
+  <p>Satu Keluarga, Sejuta Kenangan.</p>
+  <small id="footerYear">© 2026 BINGKAI FAMILY. All Rights Reserved.</small>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  // Footer year
+  var fy = document.getElementById("footerYear");
+  if (fy) {
+    fy.textContent = "© " + new Date().getFullYear() + " BINGKAI FAMILY. All Rights Reserved.";
+  }
+</script>
+</body>
+</html>
