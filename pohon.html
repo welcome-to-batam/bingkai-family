@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#263d35">
+  <meta name="description" content="BINGKAI FAMILY - Pohon Keluarga visualisasi lengkap.">
+  <title>Pohon Keluarga - BINGKAI FAMILY</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="features.css">
+  <link rel="icon" href="assets/icon-192.png">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="brand">
+    <span class="brand-icon">🌳</span>
+    <span><strong>BINGKAI FAMILY</strong><small>Pohon Keluarga</small></span>
+  </a>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="navigation" id="navigation">
+    <a href="index.html">Beranda</a>
+    <a href="index.html#pohon">Silsilah</a>
+    <a href="index.html#album">Album</a>
+    <a href="login.html" class="admin-link">Login Admin</a>
+  </nav>
+</header>
+
+<main class="feature-main">
+  <section class="feature-hero">
+    <span class="feature-eyebrow">✦ OUR FAMILY TREE</span>
+    <h1>Pohon Keluarga</h1>
+    <p>Visualisasi lengkap silsilah keluarga lintas generasi.</p>
+    <div class="feature-stats" id="treeStats"></div>
+  </section>
+
+  <section class="feature-content">
+    <div class="pohon-tree" id="pohonTree">
+      <div class="feature-loading">Memuat pohon keluarga...</div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <strong>BINGKAI FAMILY</strong>
+  <p>Satu Keluarga, Sejuta Kenangan.</p>
+  <small id="footerYear">© 2026 BINGKAI FAMILY. All Rights Reserved.</small>
+</footer>
+
+<script src="script.js"></script>
+<script type="module" src="pohon.js"></script>
+</body>
+</html>
