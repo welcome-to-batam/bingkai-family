@@ -845,3 +845,82 @@ a {
     display: flex;
   }
 }
+
+/* =================================
+   PWA INSTALL BUTTON (Mengambang)
+   ================================= */
+
+.pwa-install-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 999;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #263d35 0%, #3c5a4c 100%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: .5px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(38,61,53,.4), 0 2px 8px rgba(0,0,0,.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity .3s ease, transform .3s ease, visibility .3s ease;
+  opacity: 1;
+  visibility: visible;
+  animation: pwa-pulse 2s ease-in-out infinite;
+}
+
+.pwa-install-btn:hover {
+  background: linear-gradient(135deg, #3c5a4c 0%, #263d35 100%);
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 0 12px 30px rgba(38,61,53,.5), 0 4px 10px rgba(0,0,0,.2);
+  animation: none;
+}
+
+.pwa-install-btn:active {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Hidden state — smooth fade out + slide down */
+.pwa-install-btn.pwa-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(20px);
+  pointer-events: none;
+  animation: none;
+}
+
+/* Pulse animation untuk menarik perhatian */
+@keyframes pwa-pulse {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(38,61,53,.4), 0 2px 8px rgba(0,0,0,.15);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(38,61,53,.4), 0 2px 8px rgba(0,0,0,.15),
+                0 0 0 8px rgba(197,161,93,.15);
+  }
+}
+
+/* Mobile: posisi di atas bottom-nav */
+@media (max-width: 768px) {
+  .pwa-install-btn {
+    bottom: 80px;
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+}
+
+/* Kalau jalan sebagai PWA (standalone), tombol tidak perlu muncul */
+@media (display-mode: standalone) {
+  .pwa-install-btn {
+    display: none !important;
+  }
+   }
