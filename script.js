@@ -112,8 +112,8 @@ if ("serviceWorker" in navigator) {
   const installBtn = document.createElement("button");
   installBtn.id = "pwaInstallBtn";
   installBtn.className = "pwa-install-btn pwa-hidden"; // hidden by default
-  installBtn.innerHTML = "📱 Pasang Aplikasi";
-  installBtn.setAttribute("aria-label", "Pasang aplikasi BINGKAI FAMILY");
+  installBtn.innerHTML = "📱 Install Aplikasi";
+  installBtn.setAttribute("aria-label", "Install aplikasi BINGKAI FAMILY");
 
   // Tambah ke body setelah DOM ready
   function addButton() {
