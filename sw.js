@@ -10,7 +10,7 @@
    - Foto base64 di RTDB → tidak di-cache (dynamic)
    ========================================================== */
 
-const CACHE_NAME = "bingkai-family-v17";
+const CACHE_NAME = "bingkai-family-v18";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
