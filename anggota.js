@@ -50,16 +50,18 @@ async function loadMembers() {
       gens.push({ id: child.key, ...child.val() });
     });
 
-    // Flatten members
+    // Flatten members — sort by order field untuk urutan yang benar
     allMembers = [];
     gens.forEach((g, idx) => {
       if (g.members) {
-        Object.values(g.members).forEach((m) => {
-          allMembers.push({
-            ...m,
-            genId: g.id,
-            genTitle: g.title || "Generasi " + (idx + 1),
-            genSubtitle: g.subtitle || "",
+        Object.values(g.members)
+          .sort((a, b) => (a.order || 0) - (b.order || 0))
+          .forEach((m) => {
+            allMembers.push({
+              ...m,
+              genId: g.id,
+              genTitle: g.title || "Generasi " + (idx + 1),
+              genSubtitle: g.subtitle || "",
             genOrder: g.order || idx + 1
           });
         });
