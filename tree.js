@@ -78,7 +78,9 @@ function renderTree(gens) {
   let html = '<div class="tree-decoration">🌳</div>';
 
   gens.forEach((gen, idx) => {
-    const members = gen.members ? Object.values(gen.members).slice(0, 4) : [];
+    const members = gen.members
+      ? Object.values(gen.members).sort((a, b) => (a.order || 0) - (b.order || 0)).slice(0, 4)
+      : [];
     const memberCount = gen.members ? Object.keys(gen.members).length : 0;
 
     // Pair members into couples (2 per couple card)
