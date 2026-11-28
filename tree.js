@@ -81,6 +81,12 @@ function renderTree(gens) {
     const members = gen.members ? Object.values(gen.members).slice(0, 4) : [];
     const memberCount = gen.members ? Object.keys(gen.members).length : 0;
 
+    // Pair members into couples (2 per couple card)
+    const memberPairs = [];
+    for (let i = 0; i < members.length; i += 2) {
+      memberPairs.push(members.slice(i, i + 2));
+    }
+
     html += `
       <a href="generasi.html?id=${encodeURIComponent(gen.id)}"
          class="generation"
@@ -88,11 +94,10 @@ function renderTree(gens) {
         <span class="generation-label">GENERASI ${idx + 1}</span>
         ${gen.subtitle ? `<span class="generation-subtitle">${escapeHtml(gen.subtitle)}</span>` : ""}
         <div class="generation-members">
-          ${members.map((m) => `
-            <div class="person-card">
-              <div class="person-photo">${renderPhoto(m.photo, m.name)}</div>
-              <strong>${escapeHtml(m.name || "")}</strong>
-              <small>${escapeHtml(m.birthYear || "")}${m.deathYear ? " - " + escapeHtml(m.deathYear) : ""}</small>
+          ${memberPairs.map((pair) => `
+            <div class="tree-couple-card">
+              ${renderTreeMember(pair[0])}
+              ${pair[1] ? '<div class="tree-couple-divider"></div>' + renderTreeMember(pair[1]) : ""}
             </div>
           `).join("")}
         </div>
@@ -122,6 +127,19 @@ function renderPhoto(photo, name) {
     return '<img src="' + photo + '" alt="' + escapeAttr(name || "") + '">';
   }
   return escapeHtml(photo);
+}
+
+/**
+ * Render 1 anggota kecil di dalam couple card (untuk tree di beranda).
+ */
+function renderTreeMember(m) {
+  return `
+    <div class="person-card">
+      <div class="person-photo">${renderPhoto(m.photo, m.name)}</div>
+      <strong>${escapeHtml(m.name || "")}</strong>
+      <small>${escapeHtml(m.birthYear || "")}${m.deathYear ? " - " + escapeHtml(m.deathYear) : ""}</small>
+    </div>
+  `;
 }
 
 function friendlyError(err) {
