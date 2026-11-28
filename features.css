@@ -153,9 +153,38 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 16px;
   position: relative;
   z-index: 1;
+}
+
+/* Couple card di pohon: 2 members side by side */
+.pohon-couple-card {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: rgba(255,255,255,.5);
+  border-radius: 14px;
+  padding: 8px;
+  border: 1px solid #e8e3d4;
+}
+
+.pohon-couple-divider {
+  width: 1px;
+  align-self: center;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, #d9d4c4, transparent);
+  margin: 0 4px;
+}
+
+.pohon-couple-card .pohon-member {
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+.pohon-couple-card .pohon-member:hover {
+  transform: none;
 }
 
 .pohon-member {
@@ -948,9 +977,9 @@
 
   .pohon-member {
     width: 110px;
-  }
+   }
 
-  .anggota-grid {
+.anggota-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
   }
@@ -975,4 +1004,3 @@
     padding: 28px 20px;
   }
 }
-
