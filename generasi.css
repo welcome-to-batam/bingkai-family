@@ -156,22 +156,24 @@
   text-align: justify;
 }
 
-/* MEMBERS */
+/* MEMBERS — Couple Card Layout */
 
 .gen-members {
   background: linear-gradient(180deg, var(--cream), #f1ede0);
   padding: 70px 7%;
 }
 
+/* Grid: 2 couple cards per row on desktop, 1 on mobile */
 .gen-members-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 22px;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.gen-member-card {
+/* Couple card = container for 2 members side by side */
+.gen-couple-card {
   background: white;
   border-radius: 18px;
   overflow: hidden;
@@ -180,19 +182,43 @@
   transition: .3s;
 }
 
-.gen-member-card:hover {
+.gen-couple-card:hover {
   transform: translateY(-4px);
   border-color: var(--gold);
 }
 
+/* Inside couple card: 2 members + divider */
+.gen-couple-members {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+}
+
+/* Divider between the 2 members */
+.gen-couple-divider {
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    #e8e3d4 15%,
+    #e8e3d4 85%,
+    transparent 100%);
+}
+
+/* Each member within couple card */
+.gen-couple-member {
+  padding: 24px 18px;
+  text-align: center;
+}
+
 .gen-member-photo {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
   display: grid;
   place-items: center;
   background: var(--green-light);
-  font-size: 80px;
-  border-bottom: 3px solid var(--gold);
+  font-size: 45px;
+  border: 3px solid var(--gold);
+  overflow: hidden;
 }
 
 .gen-member-photo img {
@@ -201,36 +227,63 @@
   object-fit: cover;
 }
 
-.gen-member-body {
-  padding: 20px 18px;
-}
-
 .gen-member-name {
   color: var(--green);
   font-family: Georgia, serif;
-  font-size: 19px;
+  font-size: 18px;
   margin-bottom: 2px;
 }
 
 .gen-member-fullname {
   color: var(--muted);
   font-size: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-style: italic;
 }
 
 .gen-member-years {
   color: var(--gold);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   margin-bottom: 10px;
-  letter-spacing: 1px;
+  letter-spacing: .5px;
 }
 
 .gen-member-bio {
   color: var(--text);
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Single member (ganjil) — full width, no divider */
+.gen-couple-single .gen-couple-members {
+  grid-template-columns: 1fr;
+}
+
+.gen-couple-single .gen-couple-divider {
+  display: none;
+   }
+
+/* Mobile: 1 couple card per row, but members still side by side */
+@media (max-width: 768px) {
+  .gen-members-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Very small screens: stack members vertically within couple card */
+@media (max-width: 420px) {
+  .gen-couple-members {
+    grid-template-columns: 1fr;
+  }
+
+  .gen-couple-divider {
+    display: none;
+  }
+
+  .gen-couple-single .gen-couple-members {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* TIMELINE */
@@ -364,11 +417,6 @@
     padding: 60px 5% 40px;
   }
 
-  .gen-members-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
   .gen-nav {
     flex-direction: column;
     gap: 12px;
@@ -385,4 +433,4 @@
   .gen-timeline {
     padding: 50px 5%;
   }
-     }
+   }
