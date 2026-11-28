@@ -121,27 +121,27 @@ function renderGeneration(data, allGens) {
     </section>
   ` : "";
 
-  const membersSection = members.length ? `
+  // Pair members into couples (2 per couple card)
+  // Index 0+1 = couple 1, 2+3 = couple 2, dst. Kalau ganjil, terakhir sendiri.
+  const memberPairs = [];
+  for (let i = 0; i < members.length; i += 2) {
+    memberPairs.push(members.slice(i, i + 2));
+  }
+
+  const membersSection = memberPairs.length ? `
     <section class="gen-members">
       <div class="gen-section-heading">
         <span class="section-label">ANGGOTA GENERASI</span>
         <h2>${members.length} Anggota Generasi Ini</h2>
       </div>
       <div class="gen-members-grid">
-        ${members.map((m) => `
-          <article class="gen-member-card">
-            <div class="gen-member-photo">${renderPhoto(m.photo, m.name)}</div>
-            <div class="gen-member-body">
-              <div class="gen-member-name">${escapeHtml(m.name || "")}</div>
-              ${m.fullName ? `<div class="gen-member-fullname">${escapeHtml(m.fullName)}</div>` : ""}
-              ${(m.birthYear || m.deathYear || m.birthMonth) ? `
-                <div class="gen-member-years">
-                  ${escapeHtml(formatMemberYears(m))}
-                </div>
-              ` : ""}
-              ${m.bio ? `<div class="gen-member-bio">${escapeHtml(m.bio)}</div>` : ""}
+        ${memberPairs.map((pair) => `
+          <div class="gen-couple-card${pair.length === 1 ? " gen-couple-single" : ""}">
+            <div class="gen-couple-members">
+              ${renderCoupleMember(pair[0])}
+              ${pair[1] ? '<div class="gen-couple-divider"></div>' + renderCoupleMember(pair[1]) : ""}
             </div>
-          </article>
+          </div>
         `).join("")}
       </div>
     </section>
@@ -201,6 +201,24 @@ function renderPhoto(photo, name) {
   }
   // Selain itu (emoji, dll) → tampilkan sebagai text
   return escapeHtml(photo);
+}
+
+/**
+ * Render 1 anggota di dalam couple card.
+ * Layout: foto bulat di atas, nama, fullName, tahun, bio di bawah.
+ */
+function renderCoupleMember(m) {
+  return `
+    <div class="gen-couple-member">
+      <div class="gen-member-photo">${renderPhoto(m.photo, m.name)}</div>
+      <div class="gen-member-name">${escapeHtml(m.name || "")}</div>
+      ${m.fullName ? `<div class="gen-member-fullname">${escapeHtml(m.fullName)}</div>` : ""}
+      ${(m.birthYear || m.deathYear || m.birthMonth) ? `
+        <div class="gen-member-years">${escapeHtml(formatMemberYears(m))}</div>
+      ` : ""}
+      ${m.bio ? `<div class="gen-member-bio">${escapeHtml(m.bio)}</div>` : ""}
+    </div>
+  `;
 }
 
 /**
@@ -279,4 +297,3 @@ if (document.readyState === "loading") {
 }
 
 console.log("[Generasi] Halaman siap.");
-       
