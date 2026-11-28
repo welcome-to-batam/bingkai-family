@@ -57,17 +57,21 @@ async function loadTree() {
     let html = "";
     gens.forEach((gen, idx) => {
       const members = gen.members ? Object.values(gen.members) : [];
+      // Pair members into couples
+      const memberPairs = [];
+      for (let i = 0; i < members.length; i += 2) {
+        memberPairs.push(members.slice(i, i + 2));
+      }
       html += `
         <div class="pohon-gen">
           <div class="pohon-gen-label">GENERASI ${idx + 1}</div>
           ${gen.subtitle ? `<div class="pohon-gen-subtitle">${escapeHtml(gen.subtitle)}</div>` : ""}
           <div class="pohon-gen-members">
-            ${members.map((m) => `
-              <a href="generasi.html?id=${encodeURIComponent(gen.id)}" class="pohon-member">
-                <div class="pohon-member-photo">${renderPhoto(m.photo, m.name)}</div>
-                <strong>${escapeHtml(m.name || "")}</strong>
-                <small>${escapeHtml(m.birthYear || "")}${m.deathYear ? " - " + escapeHtml(m.deathYear) : ""}</small>
-              </a>
+            ${memberPairs.map((pair) => `
+              <div class="pohon-couple-card">
+                ${renderPohonMember(pair[0], gen.id)}
+                ${pair[1] ? '<div class="pohon-couple-divider"></div>' + renderPohonMember(pair[1], gen.id) : ""}
+              </div>
             `).join("")}
           </div>
         </div>
@@ -94,6 +98,19 @@ function renderPhoto(photo, name) {
     return '<img src="' + photo + '" alt="' + escapeAttr(name || "") + '">';
   }
   return escapeHtml(photo);
+}
+
+/**
+ * Render 1 anggota kecil di dalam couple card (untuk halaman pohon).
+ */
+function renderPohonMember(m, genId) {
+  return `
+    <a href="generasi.html?id=${encodeURIComponent(genId)}" class="pohon-member">
+      <div class="pohon-member-photo">${renderPhoto(m.photo, m.name)}</div>
+      <strong>${escapeHtml(m.name || "")}</strong>
+      <small>${escapeHtml(m.birthYear || "")}${m.deathYear ? " - " + escapeHtml(m.deathYear) : ""}</small>
+    </a>
+  `;
 }
 
 function friendlyError(err) {
