@@ -62,7 +62,7 @@ async function loadGeneration() {
       console.warn("[Generasi] Navigasi gagal dimuat:", navErr);
     }
 
-    renderGeneration(data, allGens);
+renderGeneration(data, allGens);
   } catch (err) {
     console.error("[Generasi] Error:", err);
     showError("Gagal Memuat Generasi", friendlyError(err));
@@ -71,7 +71,7 @@ async function loadGeneration() {
 
 function renderGeneration(data, allGens) {
   const members = data.members
-    ? Object.values(data.members)
+    ? Object.values(data.members).sort((a, b) => (a.order || 0) - (b.order || 0))
     : [];
   const milestones = data.milestones
     ? Object.values(data.milestones)
