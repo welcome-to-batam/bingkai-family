@@ -56,7 +56,9 @@ async function loadTree() {
     // Render tree
     let html = "";
     gens.forEach((gen, idx) => {
-      const members = gen.members ? Object.values(gen.members) : [];
+      const members = gen.members
+        ? Object.values(gen.members).sort((a, b) => (a.order || 0) - (b.order || 0))
+        : [];
       // Pair members into couples
       const memberPairs = [];
       for (let i = 0; i < members.length; i += 2) {
