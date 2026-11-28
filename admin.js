@@ -186,7 +186,7 @@ function renderPreview() {
     item.appendChild(name);
     filePreview.appendChild(item);
   });
-     }
+}
 
 // =========================================================
 // 3. KOMPRESI FOTO (CANVAS) — AGRESIF
@@ -330,7 +330,7 @@ function compressProfilePhoto(file) {
         ctx.fillRect(0, 0, targetSize, targetSize);
         ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
 
-         // Coba quality utama
+        // Coba quality utama
         let dataUrl = canvas.toDataURL("image/jpeg", 0.75);
         let sizeBytes = estimateBase64Bytes(dataUrl);
 
@@ -435,7 +435,7 @@ uploadForm.addEventListener("submit", async (e) => {
           (DB_TIMEOUT / 1000) + " detik. Periksa koneksi internet."
       );
 
-     successCount++;
+      successCount++;
       updateProgress(pctBase + pctRange, "Selesai: " + file.name);
     } catch (err) {
       console.error("Upload error:", err);
@@ -600,7 +600,7 @@ function createPhotoCard(id, data) {
     }
   });
 
-const btnDelete = document.createElement("button");
+  const btnDelete = document.createElement("button");
   btnDelete.className = "btn-delete";
   btnDelete.textContent = "Hapus";
   btnDelete.addEventListener("click", () => deletePhoto(id, data));
@@ -758,7 +758,7 @@ async function loadGenerations() {
     genList.innerHTML =
       '<div class="gen-empty">Gagal memuat: ' + friendlyDbError(err) + "</div>";
   }
-       }
+}
 
 // Tampilkan form (empty untuk baru, filled untuk edit)
 function showGenForm(gen) {
@@ -825,6 +825,10 @@ function addGenMemberRow(member) {
         <button type="button" class="btn-clear-photo">Hapus Foto</button>
         <input type="file" class="m-photo-file" accept="image/*" hidden>
       </div>
+      <div class="member-order-buttons">
+        <button type="button" class="btn-move-up" title="Pindah ke atas">↑</button>
+        <button type="button" class="btn-move-down" title="Pindah ke bawah">↓</button>
+      </div>
     </div>
     <input type="text" class="m-photo" placeholder="Atau ketik emoji (👴) atau URL foto"
       value="${escapeAttr(member ? member.photo : "")}">
@@ -854,7 +858,7 @@ function addGenMemberRow(member) {
     <button type="button" class="btn-remove-row">Hapus Anggota</button>
   `;
 
-    // Wire up photo upload
+  // Wire up photo upload
   const photoInput = row.querySelector(".m-photo");
   const photoFile = row.querySelector(".m-photo-file");
   const preview = row.querySelector(".member-photo-preview");
@@ -894,6 +898,22 @@ function addGenMemberRow(member) {
   });
 
   row.querySelector(".btn-remove-row").addEventListener("click", () => row.remove());
+
+  // Tombol move up: pindahkan row ke atas (swap dengan row sebelumnya)
+  row.querySelector(".btn-move-up").addEventListener("click", () => {
+    const prev = row.previousElementSibling;
+    if (prev && prev.classList.contains("sub-form-row")) {
+      genMembersContainer.insertBefore(row, prev);
+    }
+  });
+
+  // Tombol move down: pindahkan row ke bawah (swap dengan row setelahnya)
+  row.querySelector(".btn-move-down").addEventListener("click", () => {
+    const next = row.nextElementSibling;
+    if (next && next.classList.contains("sub-form-row")) {
+      genMembersContainer.insertBefore(next, row);
+    }
+  });
 
   // Initial preview dari data yang sudah ada
   updateMemberPhotoPreview(preview, member ? (member.photo || "") : "");
@@ -938,8 +958,7 @@ function addGenMilestoneRow(milestone) {
       value="${escapeAttr(milestone ? milestone.event : "")}">
     <button type="button" class="btn-remove-row">Hapus Milestone</button>
   `;
-
-  row.querySelector(".btn-remove-row").addEventListener("click", () => row.remove());
+         row.querySelector(".btn-remove-row").addEventListener("click", () => row.remove());
   genMilestonesContainer.appendChild(row);
 }
 
@@ -976,7 +995,8 @@ genForm?.addEventListener("submit", async (e) => {
     milestones: {}
   };
 
-  // Kumpulkan members
+// Kumpulkan members — urutan row di form menentukan order anggota
+  let memberOrder = 0;
   genMembersContainer.querySelectorAll(".sub-form-row").forEach((row) => {
     const subId = row.dataset.subId;
     const birthMonthVal = row.querySelector(".m-birth-month") ? row.querySelector(".m-birth-month").value : "";
@@ -988,7 +1008,8 @@ genForm?.addEventListener("submit", async (e) => {
       photo: row.querySelector(".m-photo").value.trim(),
       birthYear: row.querySelector(".m-birth-year").value.trim(),
       deathYear: row.querySelector(".m-death-year").value.trim(),
-      bio: row.querySelector(".m-bio").value.trim()
+      bio: row.querySelector(".m-bio").value.trim(),
+      order: memberOrder  // nomor urut berdasarkan posisi di form
     };
 
     // Hanya simpan birthday kalau diisi (untuk auto-populate kalender)
@@ -1000,6 +1021,7 @@ genForm?.addEventListener("submit", async (e) => {
     }
 
     data.members[subId] = memberData;
+    memberOrder++;
   });
 
   // Kumpulkan milestones
@@ -1048,9 +1070,9 @@ async function deleteGeneration(id, title) {
     console.error("[Generasi] Delete error:", err);
     alert("Gagal menghapus: " + friendlyDbError(err));
   }
-         }
+}
 
-         // =========================================================
+// =========================================================
 // 10. UTIL HTML ESCAPE
 // =========================================================
 
@@ -1239,7 +1261,7 @@ async function deleteEvent(id, title) {
   } catch (err) {
     alert("Gagal menghapus: " + friendlyDbError(err));
   }
-   }
+}
 
 // =========================================================
 // 12. HISTORY ARTICLES CRUD (Sejarah Keluarga)
@@ -1384,4 +1406,3 @@ async function deleteArticle(id, title) {
 }
 
 console.log("BINGKAI FAMILY Dashboard: modul events + sejarah siap.");
-       
